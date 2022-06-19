@@ -2,124 +2,158 @@
 ## Data Types: PostgreSQL – Data Types
 %
 ```text
+
 Boolean
-Character Types [ such as char, varchar, and text]
-Numeric Types [ such as integer and floating-point number]
-Temporal Types [ such as date, time, timestamp, and interval]
-UUID [ for storing UUID (Universally Unique Identifiers) ]
-Array [ for storing array strings, numbers, etc.]
-JSON [ stores JSON data]
-hstore [ stores key-value pair]
-Special Types [ such as network address and geometric data]
-        box: It is used to store rectangular box.
-        point: It is used to store geometric pair of numbers.
-        lseg: It is used to store line segment.
-        point: It is used to store geometric pair of numbers.
-        polygon:It is used to store closed geometric.
-        inet: It is used to store an IP4 address.
-        macaddr: It is used to storea MAC address.```
+
+| type                   | description                                       |
+| ---------------------- | ------------------------------------------------- |
+| {{c1:Character Types}} | such as char, varchar, and text                   |
+| {{c1:Numeric Types}}   | such as integer and floating-point number         |
+| {{c1:Temporal Types}}  | such as date, time, timestamp, and interval       |
+| {{c1:UUID}}            | for storing UUID (Universally Unique Identifiers) |
+| {{c1:Array}}           | for storing array strings, numbers, etc.          |
+| {{c1:JSON}}            | stores JSON data                                  |
+| {{c1:hstore}}          | stores key-value pair                             |
+| {{c1:Special Types}}   | such as network address and geometric data        |
+  
+| Special type   | description                                    |
+| -------------- | ---------------------------------------------- |
+| {{c1:box}}     | It is used to store rectangular box.           |
+| {{c1:point}}   | It is used to store geometric pair of numbers. |
+| {{c1:lseg}}    | It is used to store line segment.              |
+| {{c1:point}}   | It is used to store geometric pair of numbers. |
+| {{c1:polygon}} | It is used to store closed geometric.          |
+| {{c1:inet}}    | It is used to store an IP4 address.            |
+| {{c1:macaddr}} | It is used to storea MAC address.              |
+
 ```
 ## Data Types: PostgreSQL – Boolean Data Type
 %
 ```text
+
 the “bool” or”boolean” keyword is used to initialize a Boolean data type.
-1, yes, y, t, true values are converted to true
-0, no, false, f values are converted to false
+{{c1:1}}, {{c1:yes}}, {{c1:y}}, {{c1:t}}, {{c1:true}} values are converted to true
+{{c1:0}}, {{c1:no}}, {{c1:false}}, {{c1:f}} values are converted to false
 When queried for these boolean data types are converted and returned according to the following:
-t to true
-f to false
-space to null
+t to {{c1:true}}
+f to {{c1:false}}
+{{c1:space}} to null
+
 The below table depicts all valid literal values for TRUE and FALSE in PostgreSQL:
-True	False
-true	false
-‘t’	    ‘f’
-‘true’	‘false’
-‘y’	    ‘n’
-‘yes’	‘no’
-1	    0
+| true value    | false value    |
+| ------------- | -------------- |
+| {{c1:True}}   | {{c1:False}}   |
+| {{c1:true}}   | {{c1:false}}   |
+| ‘{{c1:t}}’    | ‘{{c1:f}}’     |
+| ‘{{c1:true}}’ | ‘{{c1:false}}’ |
+| ‘{{c1:y}}’    | ‘{{c1:n}}’     |
+| ‘{{c1:yes}}’  | ‘{{c1:no}}’    |
+| {{c1:1}}      | {{c1:0}}       |
+
 CREATE DATABASE bookstore;
 INSERT INTO book_availability (book_id, available)
 VALUES
-    (100, TRUE),
     (200, FALSE),
     (300, 't'),
+    (100, TRUE),
     (400, '1'),
     (500, 'y'),
     (600, 'yes'),
     (700, 'no'),
     (800, '0');
-Example 1:
-In this example we will query for all the available books in the bookstore.
+| bood_id | avaiable |
+| ------- | -------- |
+| 200     | FALSE    |
+| 300     | 't'      |
+| 100     | TRUE     |
+| 400     | '1'      |
+| 500     | 'y'      |
+| 600     | 'yes'    |
+| 700     | 'no'     |
+| 800     | '0'      |
+
+<!-- ================================================================== -->
+Example 1: query for all the available books in the bookstore.
 SELECT
     *
 FROM
     book_availability
 WHERE
-    available = 'yes';
-https://media.geeksforgeeks.org/wp-content/uploads/20200520194031/1522.png
+    {{c1:available}} = '{{c1:yes}}';
+<!-- ================================================================== -->
+not available books
 SELECT
     *
 FROM
     book_availability
 WHERE
-    available = 'no';
-https://media.geeksforgeeks.org/wp-content/uploads/20200520194114/1531.png
+    available = {{c1:'no'}};
+
+<!-- ================================================================== -->
+not available books with another method
 SELECT
     *
 FROM
     book_availability
 WHERE
-    NOT available;
-https://media.geeksforgeeks.org/wp-content/uploads/20200520194200/1541.png
+    {{c1:NOT}} {{c1:available}};
+
 ```
 ## Data Types: PostgreSQL – CHAR Data Type
 %
 ```text
-PostgreSQL has three character data types namely, CHAR(n), VARCHAR(n), and TEXT. 
-CHAR(n) is used for data(string) with a fixed-length of characters with padded spaces.  In case the length of the string is smaller than the value of “n”, then the rest of the remaining spaces are automatically padded. Similarly for a string with a length greater than the value of “n”,  PostgreSQL throws an error.
+PostgreSQL has three character data types namely, {{c1:CHAR}}(n), {{c1:VARCHAR}}(n), and {{c1:TEXT}}. 
+CHAR(n) is used for data(string) with a {{c1:fixed-length}} of characters with {{c1:padded}} spaces.  In case the length of the string is smaller than the value of “{{c1:n}}”, then the rest of the remaining spaces are automatically {{c1:padded}}. Similarly for a string with a length greater than the value of “n”,  PostgreSQL {{c1:throws an error}}.
 ```
 ## Data Types: PostgreSQL – VARCHAR Data Type
 %
 ```text
-VARCHAR(n) is the variable-length character string.Similar to CHAR(n), it can store “n” length data. But unlike CHAR(n) no padding is done in case the data length is smaller than the value of “n”.
+VARCHAR(n) is the {{c1:variable-length}} character string. Similar to CHAR(n), it can store “{{c1:n}}” length data. But unlike CHAR(n) no {{c1:padding}} is done in case the data length is smaller than the value of “n”.
 ```
 ## Data Types: PostgreSQL – TEXT Data Type
 %
 ```text
-TEXT is the variable-length character string. It can store data with unlimited length.
+TEXT is the {{c1:variable-length}} character string. It can store data with {{c1:unlimited}} length.
 ```
 ## Data Types: PostgreSQL – NUMERIC Data Type
 %
 ```text
-PostgreSQL has 2 types of numbers namely, integers and floating-point numbers. 
+PostgreSQL has 2 types of numbers namely, {{c1:integers}} and {{c1:floating-point}} numbers. 
 1. Integer: 
-Small integer
-Integer
-Serial (SERIAL) works similar to the integers except these are automatically generated in the columns by PostgreSQL.
+1.1 {{c1:Small integer}}
+1.2 {{c1:Integer}}
+1.3 {{c1:Serial}} (SERIAL) works similar to the integers except these are automatically generated in the {{c1:columns}} by PostgreSQL.
 2. Floating-point number: 
-float(n) is used for floating-point numbers with n precision and can have a maximum of 8-bytes.
-float8 or real is used to represent 4-byte floating-point numbers.
-A real number N(d,p) meaning with d number of digits and p number of decimal points after, are part of numeric or numeric(d, p). These are generally very precise.
+2.1 {{c1:float}}(n) is used for floating-point numbers with {{c1:n}} precision and can have a maximum of {{c1:8}}-bytes.
+2.2 {{c1:float8}} or real is used to represent {{c1:4}}-byte floating-point numbers.
+2.3 {{c1:real}} {{c1:number}} N(d,p) meaning with {{c1:d}} number of digits and {{c1:p}} number of decimal points after, are part of numeric or numeric(d, p). These are generally very precise.
 ```
 ## Data Types: PostgreSQL – SMALLINT Integer Data Type
 %
 ```text
-Small integer (SMALLINT) has a range -32, 768 to 32, 767 and has a size of 2-byte.
+Small integer ({{c1:SMALLINT}}) has a range -32, 768 to 32, 767 and has a size of 2-byte.
 ```
 ## Data Types: PostgreSQL – INTEGER Data Type
 %
 ```text
-Integer (INT) has a range -2, 147, 483, 648 to 2, 147, 483, 647 and has a size of 4-byte.
+Integer ({{c1:INT}}) has a range -2, 147, 483, 648 to 2, 147, 483, 647 and has a size of 4-byte.
 ```
 ## Data Types: PostgreSQL – BIGINT Integer Data Type
 %
 ```text
 ## Data Types: PostgreSQL – Date Data Type
+<!-- ================================================================== -->
 INSERT INTO employees (first_name, last_name, birth_date, hire_date)
-VALUES ('Raju', 'Kumar', '1996-12-02', '2020-01-01'),
        ('Nikhil', 'Aggarwal', '1997-08-24', '2019-01-01'),
+VALUES ('Raju', 'Kumar', '1996-12-02', '2020-01-01'),
        ('Anshul', 'Aggarwal', '1994-05-11', '2017-01-01');
-<!--  -->
+<!-- ================================================================== -->
+| first_name | last_name  | birth_date   | hire_date    |
+| ---------- | ---------- | ------------ | ------------ |
+| 'Nikhil'   | 'Aggarwal' | '1997-08-24' | '2019-01-01' |
+| 'Raju'     | 'Kumar'    | '1996-12-02' | '2020-01-01' |
+| 'Anshul'   | 'Aggarwal' | '1994-05-11' | '2017-01-01' |
+<!-- ================================================================== -->
 SELECT
     employee_id,
     first_name,
@@ -127,8 +161,7 @@ SELECT
     AGE(birth_date)
 FROM
     employees;
-Note: In the above example notice the use of AGE() function. To calculate age at the current date in years, months, and days, you use the AGE() function. 
-https://media.geeksforgeeks.org/wp-content/uploads/20200522132336/1781.png
+Note: In the above example notice the use of AGE() function. To calculate {{c1:age}} at the current date in {{c1:years}}, {{c1:months}}, and {{c1:days}}, you use the AGE() function. 
 ```
 ## Data Types: PostgreSQL – Timestamp Data Type.
 %
@@ -138,19 +171,20 @@ there is nothing in link
 ## Data Types: PostgreSQL – UUID Data Type
 %
 ```text
-The UUID data type allows you to store Universal Unique Identifiers defined by RFC 4122. The UUID values guarantee a better uniqueness than SERIAL and can be used to hide sensitive data exposed to the public such as values of id in URL. 
+The UUID data type allows you to store {{c1:Universal}} {{c1:Unique}} {{c1:Identifiers}} defined by RFC 4122. The UUID values guarantee a better uniqueness than {{c1:SERIAL}} and can be used to {{c1:hide}} sensitive data exposed to the public such as values of id in URL. 
 ```
 ## Data Types: PostgreSQL – TIME Data Type
 %
 ```text
-PostgreSQL provides user with TIME data type that is used to handle time values. It requires 8 bytes of storage and can have precision up to 6 digits. It can range from 00:00:00 to 24:00:00.
-HH:MM   
-HH:MM:SS
-HHMMSS
+PostgreSQL provides user with {{c1:TIME}} data type that is used to handle time values. It requires {{c1:8}} bytes of storage and can have precision up to {{c1:6}} digits. It can range from {{c1:00}}:{{c1:00}}:{{c1:00}} to {{c1:24}}:{{c1:00}}:{{c1:00}}.
+
+{{c1:HH}}:{{c1:MM}}   
+{{c1:HH}}:{{c1:MM}}:{{c1:SS}}
+{{c1:HHMMSS}}
 If precision is required the following format needs to be followed:
-MM:SS.pppppp    
-HH:MM:SS.pppppp
-HHMMSS.pppppp
+{{c1:MM}}:{{c1:SS}}.{{c1:pppppp}}    
+HH:MM:SS.{{c1:pppppp}}
+HHMMSS.{{c1:pppppp}}
 ```
 ## Data Types: PostgreSQL – Interval Data Type
 
@@ -213,8 +247,7 @@ FROM
     my_table
 ORDER BY
     colour_1;
-Output: 
-
+<!-- ================================================================== -->
 Example 2: 
 PostgreSQL DISTINCT on multiple columns 
 
@@ -226,8 +259,6 @@ FROM
 ORDER BY
     colour_1,
     colour_2;
-Output: 
-
 ```
 ## Querying & Filtering Data: PostgreSQL – ORDER BY clause
 %
@@ -2149,7 +2180,7 @@ SELECT
         agent_id
 FROM
     op_PAk;
-Output: 
+<!-- ================================================================== -->
 Example 2: 
 Here we will query for “agent_id” of agents who have been active both in Pakistan and China using the INTERSECT operator and use the ORDER BY clause to sort them by ascending “agent_id”. 
 SELECT
@@ -2264,7 +2295,7 @@ FROM
 GROUP BY
     course_name,
     segment;
-Output: 
+<!-- ================================================================== -->
 
 Example 2: 
 The following query finds the number of courses sold by course_name. It defines a grouping set of the course_name: 
@@ -2276,7 +2307,7 @@ FROM
     geeksforgeeks_courses
 GROUP BY
     course_name;
-Output: 
+<!-- ================================================================== -->
 
 Example 3: 
 The following query finds the number of products sold by segment. It defines a grouping set of the segment: 
@@ -2288,7 +2319,7 @@ FROM
     geeksforgeeks_courses
 GROUP BY
     segment;
-Output: 
+<!-- ================================================================== -->
 
 Example 4: 
 In the following query, we will generate a single result set with the aggregates for all grouping sets. 
