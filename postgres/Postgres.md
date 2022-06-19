@@ -61,6 +61,8 @@ VALUES
     (600, 'yes'),
     (700, 'no'),
     (800, '0');
+
+table bookstore: 
 | bood_id | avaiable |
 | ------- | -------- |
 | 200     | FALSE    |
@@ -144,8 +146,9 @@ Integer ({{c1:INT}}) has a range -2, 147, 483, 648 to 2, 147, 483, 647 and has a
 ## Data Types: PostgreSQL – Date Data Type
 <!-- ================================================================== -->
 INSERT INTO employees (first_name, last_name, birth_date, hire_date)
+     VALUES  
        ('Nikhil', 'Aggarwal', '1997-08-24', '2019-01-01'),
-VALUES ('Raju', 'Kumar', '1996-12-02', '2020-01-01'),
+       ('Raju', 'Kumar', '1996-12-02', '2020-01-01'),
        ('Anshul', 'Aggarwal', '1994-05-11', '2017-01-01');
 <!-- ================================================================== -->
 | first_name | last_name  | birth_date   | hire_date    |
@@ -166,7 +169,57 @@ Note: In the above example notice the use of AGE() function. To calculate {{c1:a
 ## Data Types: PostgreSQL – Timestamp Data Type.
 %
 ```text
-there is nothing in link  
+PostgreSQL – Timestamp Data Type
+
+Last Updated : 24 Jan, 2022
+In PostgreSQL 2 temporal data types namely {{c1:timestamp}} and {{c1:timestamptz}} where one is without timezone and the later is with timezone respectively, are supported to store Time and Date to a column. Both timestamp and timestamptz uses {{c1:8}} bytes for storing timestamp values. 
+
+Syntax: {{c1:TIMESTAMP}}; or {{c1:TIMESTAMPTZ}};
+
+Example 1: 
+First we create a table that has both timestamp and timestamptz columns using the below command: 
+
+CREATE TABLE timestamp_demo (ts TIMESTAMP, tstz TIMESTAMPTZ);
+Then we will set the time zone of database server to Asia/Calcutta as below: 
+{{c1:SET}} {{c1:timezone}} = {{c1:'}}Asia/Calcutta{{c1:'}};
+
+Now that our time zone is set, we will insert a new row into the timestamp_demo table using the below command: 
+
+INSERT INTO timestamp_demo (ts, tstz)
+VALUES
+    (
+        '2020-06-22 19:10:25-07', '2020-06-22 19:10:25-07'
+    );
+
+| ts  | tstz |
+| --- | ---- |
+'2020-06-22 19:10:25-07'
+'2020-06-22 19:10:25-07'
+
+Now we will query data from the timestamp and timestamptz columns using the below command: 
+SELECT
+    ts, tstz
+FROM
+    timestamp_demo;
+<!-- ================================================================== --> 
+Example 2: 
+In this example we will convert Asia/Calcutta timezone into America/New_York timezone using the {{c1:timezone}}({{c1:zone}}, {{c1:timestamp}}) function. 
+
+CREATE TABLE timezone_conversion_demo ( tstz TIMESTAMPTZ);
+Then we will set the time zone of database server to Asia/Calcutta as below: 
+ 
+SET timezone = 'Asia/Calcutta';
+Now that our time zone is set, we will insert a new row into the timezone_conversion_demo table using the below command: 
+ 
+INSERT INTO timezone_conversion_demo ( tstz)
+VALUES
+    (
+        '2020-06-22 19:10:25-07'
+    );
+
+Now we will query data from the timestamp and timestamptz columns using the below command: 
+SELECT {{c1:timezone}}('America/New_York', '2020-06-22 19:10:25');
+
 ```
 ## Data Types: PostgreSQL – UUID Data Type
 %
@@ -187,15 +240,319 @@ HH:MM:SS.{{c1:pppppp}}
 HHMMSS.{{c1:pppppp}}
 ```
 ## Data Types: PostgreSQL – Interval Data Type
+%
+```text
+PostgreSQL – Interval Data Type
 
+Last Updated : 30 Sep, 2021
+In PostgreSQL the {{c1:interval}} data type is used to store and manipulate a time period. It holds {{c1:16}} bytes of space and ranging from -178, 000, 000 years to 178, 000, 000 years. It also has additional attribute called “{{c1:precision}} (denoted by {{c1:p}})” that can be used to set the level of precision in the query results. 
+
+Syntax:{{c1:interval}} [ {{c1:Data_fields}} ] [ ({{c1:p}}) ]
+
+Where,
+{{c1:Data_fields}}: Time period
+{{c1:p}}: precision
+
+
+PostgreSQL stores the interval type value in the integer form of days and months whereas for values in seconds, it can be {{c1:fractions}}. 
+
+Example 1: 
+In this example we will query to know the time of 4 hours 25 minutes ago at the current time of last year using the below commands: 
+
+SELECT
+    now(),
+    now() - {{c1:INTERVAL}} '{{c1:1 year 4 hours 25 minutes}}' 
+             AS "4 hours 25 minutes ago of last year";
+answer:              
+| now | 4 hours 25 minutes ago of last year |
+| --- | ----------------------------------- |
+|     |                                     |
+<!-- ================================================================== --> 
+Example 2: 
+In this example we will convert an interval value ta string format using the {{c1:TO_CHAR}}() function.The {{c1:TO_CHAR}}() function takes the first argument as an {{c1:interval}} value, the second one as the {{c1:format}}, and returns a string that represents the interval in the specified format. 
+
+we want HH24:mI:SS format 
+
+SELECT
+    TO_CHAR(
+        {{c1:INTERVAL}} '{{c1:15h 25m 12s}}',
+        '{{c1:HH24:MI:SS}}'
+    );
+<!-- ================================================================== --> ```
+```
 ## Data Types: PostgreSQL – User-defined Data Type
+%
+```text
+PostgreSQL – CREATE DOMAIN
 
+Last Updated : 06 Sep, 2021
+PostgreSQL supports the creation of user-defined data types using the following statements: 
+ 
+
+{{c1:CREATE}} {{c1:DOMAIN}}:It creates a user-defined data type that can have optional constraints. 
+ 
+{{c1:CREATE}} {{c1:TYPE}}:It is often applied to create a composite type (data type that are mixes of two or more data types) using stored procedures. 
+ 
+CREATE DOMAIN: 
+In PostgreSQL, a domain is a data type that has optional {{c1:constraints}}. It is a must to have a {{c1:unique}} name and a well-defined {{c1:schema}} range. 
+
+Example: First, we create a table (say, marksheet) using the below command: 
+ 
+
+CREATE TABLE marksheet (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR NOT NULL,
+    last_name VARCHAR NOT NULL,
+    email VARCHAR NOT NULL,
+    marks_obtained INT NOT NULL, 
+    CHECK (
+        first_name !~ '\s'
+        AND last_name !~ '\s'
+    )
+);
+not null mark in postgres: {{c1:!~}}
+not contain any space in postgres: {{c1:'\s'}}
+
+The first_name and last_name fields are not null and must not contain any spaces. For the simplicity of the teachers we can make a student_detail domain using the below command: 
+ 
+
+{{c1:CREATE}} {{c1:DOMAIN}} student_detail AS 
+    VARCHAR NOT NULL CHECK ({{c1:value}} {{c1:!~}} {{c1:'\s'}});
+
+Now we can use the student_detail as the data type of the first_name and last_name fields as follows: 
+ 
+
+CREATE TABLE marksheet (
+    student_id serial PRIMARY KEY,
+    first_name student_detail,
+    last_name student_detail,
+    marks_obtained INT NOT NULL,
+    email VARCHAR NOT NULL
+);
+| student_id | first_name | last_name | marks_obtained | email |
+| ---------- | ---------- | --------- | -------------- | ----- |
+|            |            |           |                |       |
+Now insert some data to the table using the below command: 
+ 
+
+INSERT INTO marksheet (first_name, last_name,marks_obtained, email)
+VALUES
+    (
+        'Raju K',
+        'Singh',
+     95,
+        'rajukumar@gmail.com'
+    );
+At this stage PostgreSQL will raise the following error: 
+ 
+
+ERROR:  value for domain marksheet violates check {{c1:constraint}} "marksheet_check"
+
+So, the behaviour is as we expected. To modify or delete a domain, one can make use of the {{c1:ALTER}} {{c1:DOMAIN}} or {{c1:DROP}} {{c1:DOMAIN}} respectively. because of 'Raju k' which have space in its string
+
+To get all domains in the current database use the below command: {{c1:\dD}}
+```
 ## Data Types: PostgreSQL – Array Data Type
+%
+```text
+PostgreSQL – Array Data Type
 
+Last Updated : 22 Feb, 2021
+PostgreSQL Supports the concept of Arrays. All data type has a companion array associated with it irrespective of the properties of the the data type.It is available even for {{c1:user-defined}} data types.
+
+Syntax: {{c1:variable_name}} {{c1:DATA_TYPE}} {{c1:[]}};
+Example 1: First we create a table(say, contacts) where the phones column is defined as an array of text as follows:
+
+CREATE TABLE contacts (
+    id serial PRIMARY KEY,
+    name VARCHAR (100),
+    phones TEXT []
+);
+
+| id  | name | phones |
+| --- | ---- | ------ |
+
+INSERT INTO contacts (name, phones)
+VALUES
+    (
+        'Raju Kumar',
+        '{"(408)-589-5841"}'
+    ),
+    (
+        'Nikhil Aggarwal',
+        '{"(408)-589-5841"}'
+    ),
+    (
+        'Anshul Aggarwal',
+        '{"(408)-589-5841"}'
+    ),
+    (
+        'Puja Singh',
+        '{"(408)-589-5842", "(408)-589-58423"}'
+    );
+
+table contacts:
+| id             | name            | phones                                |
+| -------------- | --------------- | ------------------------------------- |
+| auto increment | Raju Kumar      | ["(408)-589-5841", ]                  |
+| auto increment | Nikhil Aggarwal | ["(408)-589-5841", ]                  |
+| auto increment | Anshul Aggarwal | ["(408)-589-5841", ]                  |
+| auto increment | Puja Singh      | ["(408)-589-5842","(408)-589-58423" ] |
+
+Now we query for the contact data as follows:
+
+SELECT
+    name,
+    phones
+FROM
+    contacts;
+<!-- ================================================================== -->
+Example 2: In the same table we created in the above example we will query to know who has the phone number (408)-589-5842 irrespective of the position of the phone number in the phone’s array, using {{c1:ANY}}() function as follows:
+
+SELECT
+    name,
+    phones
+FROM
+    contacts
+WHERE
+    {{c1:'(408)-589-5842'}} = {{c1:ANY(phones)}};
+```
 ## Data Types: PostgreSQL – hstore Data Type
+%
+```text
+PostgreSQL – hstore Data Type
 
+Last Updated : 22 Feb, 2021
+The hstore module is used to implement the hstore data type in the form of key-value pairs for a {{c1:single}} value within PostgreSQL. The hstore data type is remarkably effective in many cases, such as, multiple {{c1:rows}} with multiple {{c1:attributes}} which are rarely queried for or {{c1:semi}}-structured data.
+
+Syntax: {{c1:variable_name}} {{c1:hstore}};
+It’s pretty simple to enable the hstore extension for using the hstore data type using the below command:
+{{c1:CREATE}} {{c1:EXTENSION}} {{c1:hstore}};
+
+Example 1: First we create a books table with id as the primary key that identifies the book, the title as the title of the products and attr that stores attributes of the book such as ISBN, weight, and paperback. The data type of the attr column is the hstore using the below command:
+
+CREATE TABLE books (
+    id serial primary key,
+    title VARCHAR (255),
+    attr hstore
+);
+INSERT INTO books (title, attr)
+VALUES
+    (
+        'Winds Of Winter',
+        '"paperback" => "2403",
+       "publisher" => "Bantam Spectra/US & Voyager Books/UK",
+       "language"  => "English",
+       "ISBN-13"   => "978-1449370000",
+         "weight"    => "13.2 ounces"'
+    ),
+       (
+        'A Dance with Dragons',
+        '"paperback" => "2553",
+       "publisher" => "Bantam Spectra/US & Voyager Books/UK",
+       "language"  => "English",
+       "ISBN-13"   => "978-1449370001",
+         "weight"    => "14.2 ounces"'
+    ),
+       (
+        'A Dream of Spring',
+        '"paperback" => "2683",
+       "publisher" => "Bantam Spectra/US & Voyager Books/UK",
+       "language"  => "English",
+       "ISBN-13"   => "978-1449370002",
+         "weight"    => "15.7 ounces"'
+    );
+
+| id                    | title                | attr |
+| --------------------- | -------------------- | ---- |
+| auto increment number | Winds Of Winter      |'"paperback" => "2683",
+                                                 "publisher" => "Bantam Spectra/US & Voyager Books/UK",
+                                                 "language"  => "English",
+                                                 "ISBN-13"   => "978-1449370002",
+                                                 "weight"    => "15.7 ounces"'      |
+| auto increment number | A Dance with Dragons |      |
+| auto increment number | A Dream of Spring    |      |
+    
+Now we query for the same inserted data using the below command:
+
+SELECT
+    attr
+FROM
+    books;
+<!-- ================================================================== -->
+
+
+Example 2:
+Postgresql hstore supports the use of {{c1:->}} operator. This is used to query the value of a particular {{c1:key}} from an hstore column. For instance, if we want to query for the ISBN-13 of all available books in the books table, the same operator can be used as shown below:
+
+SELECT
+    {{c1:attr}} {{c1:->}} 'ISBN-13' AS isbn
+FROM
+    books;
+<!-- ================================================================== -->
+```
 ## Data Types: PostgreSQL – JSON Data Type
+%
+```text
+PostgreSQL – JSON Data Type
 
+Last Updated : 22 Feb, 2021
+JSON stands for JavaScript Object Notation. It is used to store data in the form of key-value pairs and is generally used for communicating between the server and the client. Contrary to other formats, JSON is human-readable text.
+PostgreSQL has support for native JSON data type since version 9.2. It offers numerous {{c1:functions}} and {{c1:operators}} for handling JSON data.
+
+Syntax: {{c1:variable_name}} {{c1:json}};
+
+Example 1: First, create a table (say, orders) using the below command:
+
+CREATE TABLE orders (
+    ID serial NOT NULL PRIMARY KEY,
+    info json NOT NULL
+);
+
+INSERT INTO orders (info)
+VALUES
+    (
+        '{ "customer": "Raju Kumar", "items": {"product": "coffee", "qty": 6}}'
+    );
+
+| ID                    | info                                                                  |
+| --------------------- | --------------------------------------------------------------------- |
+| auto increment number | { "customer": "Raju Kumar", "items": {"product": "coffee", "qty": 6}} |
+
+Now we will query for the orders information using the below command:
+SELECT
+    info
+FROM
+    orders;
+<!-- ================================================================== -->
+Example 2: In the above example we created an orders table and added {{c1:single}} JSON data into it. In this example we will be looking onto inserting multiple JSON data in the same table using the command below:
+
+INSERT INTO orders (info)
+VALUES
+    (
+        '{ "customer": "Nikhil Aggarwal", "items": {"product": "Diaper", "qty": 24}}'
+    ),
+    (
+        '{ "customer": "Anshul Aggarwal", "items": {"product": "Tampons", "qty": 1}}'
+    ),
+    (
+        '{ "customer": "Naveen Arora", "items": {"product": "Toy Train", "qty": 2}}'
+    );
+
+| ID                    | info                                                                          |
+| --------------------- | ----------------------------------------------------------------------------- |
+| auto increment number | '{"customer": "Raju Kumar", "items": {"product": "coffee", "qty": 6}'         |
+| auto increment number | '{ "customer": "Nikhil Aggarwal", "items": {"product": "Diaper", "qty": 24}}' |
+| auto increment number | '{ "customer": "Anshul Aggarwal", "items": {"product": "Tampons", "qty": 1}}' |
+| auto increment number | '{ "customer": "Naveen Arora", "items": {"product": "Toy Train", "qty": 2}}'  |
+
+Now we will query for the orders information using the below command:
+
+SELECT
+    info
+FROM
+    orders;
+```
 ## Querying & Filtering Data: PostgreSQL – SELECT
 %
 ```text
@@ -310,7 +667,7 @@ FROM
     customer
 WHERE
     first_name = 'Kelly';
-Output:
+<!-- ================================================================== -->
 Example 2:
 Using the WHERE clause with the AND operator. Here we will be using the AND operator in the “customer” table of our sample database.
 SELECT
@@ -321,7 +678,7 @@ FROM
 WHERE
     first_name = 'Kelly'
 AND last_name = 'Knott';
-Output:
+<!-- ================================================================== -->
 Example 3:
 Using the WHERE clause with the OR operator. Here we will be using the OR operator in the “customer” table of our sample database.
 SELECT
@@ -332,7 +689,7 @@ FROM
 WHERE
     last_name = 'Cooper' OR 
     first_name = 'Jo';
-Output:
+<!-- ================================================================== -->
 Example 4:
 Using the WHERE clause with the IN operator. The IN operator is used for string matching. Here we will be using the IN operator in the “customer” table of our sample database.
 SELECT
@@ -342,7 +699,7 @@ FROM
     customer
 WHERE 
     first_name IN ('Kelly', 'Jo', ' Alexander');
-Output:
+<!-- ================================================================== -->
 Example 5:
 Using the WHERE clause with the LIKE operator. The LIKE operator is used to find string matching a particular pattern. Here we will be using the LIKE operator in the “customer” table of our sample database.
 SELECT
@@ -352,7 +709,7 @@ FROM
     customer
 WHERE 
     first_name LIKE 'Kath%';
-Output:
+<!-- ================================================================== -->
 Example 6:
 Using the WHERE clause with the BETWEEN operator. The BETWEEN operator return if a value is in the mentioned range. Here we will be using the BETWEEN operator in the “customer” table of our sample database.
 SELECT
@@ -365,7 +722,7 @@ WHERE
     LENGTH(first_name) BETWEEN 3 AND 7
 ORDER BY
     name_length;
-Output:
+<!-- ================================================================== -->
 Example 7:
 Using the WHERE clause with the not equal operator (<>). Here we will be using the <> operator in the “customer” table of our sample database.
 SELECT 
@@ -396,7 +753,7 @@ FROM
 ORDER BY
     film_id
 LIMIT 10;
-Output:
+<!-- ================================================================== -->
 Example 2:
 In this example we will be using the LIMIT clause to get the top 10 expensive films ordered by the “rental_rate” from the “film” table of our sample database.
 SELECT
@@ -431,7 +788,7 @@ FROM
 ORDER BY
     title 
 FETCH FIRST 10 ROW ONLY;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query the first 10 rows of the film after the first five films, sorted by “title” from the film table of our sample database.
 SELECT
@@ -464,7 +821,7 @@ WHERE
     customer_id IN (10, 12)
 ORDER BY
     return_date DESC;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will make a query for a list of customer id of customers that has rental’s return date on 2005-05-27.
 SELECT
@@ -498,7 +855,7 @@ FROM
       customer
 WHERE
       email IS NULL;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will make a query to find all the “title” of the films that don’t have a “release_year” in the “film” table of our sample database.
 SELECT
@@ -527,7 +884,7 @@ FROM
     customer
 WHERE
     first_name LIKE 'K%';
-Output:
+<!-- ================================================================== -->
 Notice few things in the above example, the WHERE clause contains a special expression: the first_name, the LIKE operator, and a string that contains a percent (%) character, which is referred to as a pattern.
 Example 2:
 Here we will query for customers whose first name begins with any single character, is followed by the literal string “her”, and ends with any number of characters using the LIKE operator in our sample database.
@@ -558,7 +915,7 @@ FROM
     customer
 WHERE
     first_name NOT LIKE 'K%';
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query for customers whose first name doesn’t begin with any single character, is not followed by the literal string “her” respectively using the NOT LIKE operator in our sample database.
 SELECT
@@ -589,7 +946,7 @@ FROM
 WHERE
     amount BETWEEN 3
 AND 5;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query for getting the payment whose payment date is between 2007-02-07 and 2007-02-15 using the BETWEEN operator in the “Payment” table of our sample database.
 SELECT
@@ -602,7 +959,7 @@ FROM
 WHERE
     payment_date BETWEEN '2007-02-07'
 AND '2007-02-15';
-Output:
+<!-- ================================================================== -->
 Note: While making date queries the literal date in ISO 8601 format i.e., YYYY-MM-DD should be used in PostgreSQL.
 ```
 ## Querying & Filtering Data: PostgreSQL – HAVING clause
@@ -635,7 +992,7 @@ GROUP BY
     customer_id
 HAVING
     SUM (amount) > 200;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query to select the stores that has more than 200 customers using the HAVING clause in the “customer” table of our sample database.
 SELECT
@@ -672,7 +1029,7 @@ FROM
    payment
 GROUP BY
    customer_id;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query to get the amount that each customer has paid till date and use an aggregate function (ie SUM()), to do so and group them by customer_id from the “payment” table of the sample database.
 SELECT
@@ -682,7 +1039,7 @@ FROM
     payment
 GROUP BY
     customer_id;
-Output:
+<!-- ================================================================== -->
 Example 3:
 here we will make a query to count the number of payment transactions that each staff has been processing, you group the rows in the payment table based on staff_id and use the COUNT() function to get the number of transactions.
 SELECT
@@ -743,7 +1100,7 @@ INSERT INTO employee (
 )
 VALUES
     (9, 'Mohit', 'Verma', 3);
-Output:
+<!-- ================================================================== -->
 Now check for the newly added employee using the below command:
 SELECT * FROM employee;
 Now the overall hierarchy looks like the below image:
@@ -825,7 +1182,7 @@ Here we will update the employee “Raju Kumar” name to “Raju Singh” using
 UPDATE employee 
 SET last_name = 'Singh'
 WHERE first_name = 'Raju';
-Output:
+<!-- ================================================================== -->
 Example 2:
 In the above we made an update to a single row, but here we will make changes to multiple rows. Here we will change the last name of everyone to ‘Gupta’ whose last name is ‘Aggarwal’.
 UPDATE employee
@@ -878,7 +1235,7 @@ Example 1:
 Here we will be deleting the employee data whose first name is “Raju”.
 DELETE FROM employee
 WHERE first_name = 'Raju';
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will delete multiple rows from the “employee” table. We will be deleting the data of the employee named “Abhishek Kelenia” and employees who work under him.
 DELETE FROM employee
@@ -944,7 +1301,7 @@ do
 update set full_name=EXCLUDED.full_name; 
 To check the changes to the table, we use the following query:
 select * from employees;
-Output:
+<!-- ================================================================== -->
 In this example, we tried to use the UPDATE clause as the action of the INSERT statement to update the name of the employee with ID 6 if the employee exists. 
 Example 2:
 The below query is used to insert an employee with employee id 18 with the name ‘W. Sundar’ and manager id ‘6’ (if no record exists) but do nothing, in case, such a record is already present in the table.  
@@ -954,7 +1311,7 @@ on conflict (employee_id)
 do nothing;
 To check the changes to the table, we use the following query:
 select * from employees;
-Output:
+<!-- ================================================================== -->
 In this example, nothing was changed in the table because employee with employee id 18 already exists and the action is to do nothing. 
 Example 3:
 The below query is used to insert an employee with employee id 21 with the name ‘W. Sundar’ and manager id ‘6’ ( if no record exists ) but do nothing, in case, such a record is already present in the table. 
@@ -964,7 +1321,7 @@ on conflict (employee_id)
 do nothing; 
 To check the changes to the table, we use the following query:
 select * from employees;
-Output:
+<!-- ================================================================== -->
 In this example, a new record was inserted into the table as no existing employee was present in the table with employee id 21
 ```
 ## Conditionals: PostgreSQL – CASE
@@ -1012,7 +1369,7 @@ SELECT
     ) AS "Luxury"
 FROM
     film;
-Output:
+<!-- ================================================================== -->
 Example 2:
 PostgreSQL provides another form of the CASE expression called simple form as follows:
 CASE expression
@@ -1052,7 +1409,7 @@ SELECT
     ) AS "Luxury"
 FROM
     film;
-Output:
+<!-- ================================================================== -->
 The query returns the same result as the first CASE example.
 ```
 ## Conditionals: PostgreSQL – COALESCE
@@ -1144,7 +1501,7 @@ SELECT
     )
 FROM
     posts;
-Output:
+<!-- ================================================================== -->
 nullif
 ```
 ## Conditionals: PostgreSQL – CAST
@@ -1159,7 +1516,7 @@ Example 1:
 The following statement converts a string constant to an integer:
 SELECT
  CAST ('100' AS INTEGER);
-Output:
+<!-- ================================================================== -->
 psql cast
 If the expression cannot be converted to the target type, PostgreSQL will raise an error. See the following:
 SELECT
@@ -1171,7 +1528,7 @@ This example uses the CAST to convert a string to a date:
 SELECT
    CAST ('2020-01-01' AS DATE),
    CAST ('01-OCT-2020' AS DATE);
-Output:
+<!-- ================================================================== -->
 psql cast
 Example 3:
 This example uses the CAST() to convert the string ‘true’, ‘T’ to true and ‘false’, ‘F’ to false:
@@ -1207,7 +1564,7 @@ BEGIN
     RAISE NOTICE 'a is equal to b';
   END IF;
 END $$;
-Output:
+<!-- ================================================================== -->
 Example 2:
 DO $$
 DECLARE
@@ -1222,7 +1579,7 @@ BEGIN
      RAISE NOTICE 'a is equal to b';
   END IF;
 END $$;
-Output:
+<!-- ================================================================== -->
 ```
 ## Control Flow: PostgreSQL – CASE Statement
 %
@@ -1271,7 +1628,7 @@ END; $$
 LANGUAGE plpgsql;
 Now test the get_price_segment() function using the statement:
 SELECT get_price_segment(123) AS "Price Segment";
-Output:
+<!-- ================================================================== -->
 Searched CASE statement
 Syntax:
 CASE
@@ -1351,7 +1708,7 @@ begin
     raise notice 'cnt: %', cnt;
    end loop;
 end; $$
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following code uses the for loop statement to iterate over ten numbers from 10 to 1 and display each of them in each iteration:
 do $$
@@ -1360,7 +1717,7 @@ begin
       raise notice 'cnt: %', cnt;
    end loop;
 end; $$
-Output:
+<!-- ================================================================== -->
 2. For loop to iterate over a result set
 The syntax of the for loop statement to iterate over a result set of a query:
 [ <<label>> ]
@@ -1417,7 +1774,7 @@ begin
     end loop;
 end;
 $$;
-Output:
+<!-- ================================================================== -->
 
 3. For loop to iterate over the result set of a dynamic query
 The syntax of the for loop statement to iterate over a result set of a dynamic query:
@@ -1462,8 +1819,8 @@ begin
     end loop;
 end;
 $$
-Output:
-If we change the sort_type to 2, we’ll get the following output:
+<!-- ================================================================== -->
+If we change the sort_type to 2, we’ll get the following <!-- ================================================================== -->
 ```
 ## Control Flow: PostgreSQL – Exit
 %
@@ -1496,7 +1853,7 @@ raise notice '%', cnt;
 cnt := cnt + 1 ;  
 end loop;  
 end; $$;
-Output:
+<!-- ================================================================== -->
 In the above example, we terminate our loop as soon as the value of our cnt variable reaches n(here 8) and thus, only values up to 7 are printed.
 Using EXIT to exit a block
 We can then the exit statement to terminate a block of code specified by the begin..end keywords. In this case, the exit directly passes the flow of the program to after the end keyword, thus ending the current block.
@@ -1523,7 +1880,7 @@ begin
   raise notice '%', 'End of block';
 end;
 $$;
-Output:
+<!-- ================================================================== -->
 In the above example, the statement after exit was not printed as the block was terminated using EXIT before the statement. Thus inside the block, only statements before EXIT were executed and after that, the flow simply passes after the block ended.
 ```
 ## Control Flow: PostgreSQL – Continue
@@ -1556,7 +1913,7 @@ begin
  end loop;
 end;
 $$;
-Output:
+<!-- ================================================================== -->
 In the above example, we use the continue statement to skip the odd numbers by using the fact that the remainder when an odd number is divided by 2 is 1.  
 Example 2 :
 The following example will be used to display all numbers from 1 to 10 without displaying the number 6.
@@ -1577,7 +1934,7 @@ begin
  end loop;
 end;
 $$;
-Output:
+<!-- ================================================================== -->
 In the above example, we use the continue statement to skip the iteration when the value of the cnt variable reaches 6.
 ```
 ## Working with JOINS & Schemas: PostgreSQL – Joins
@@ -1631,7 +1988,7 @@ SELECT
 FROM
     zoo_1 
 INNER JOIN zoo_2 ON zoo_1.animal = zoo_2.animal;
-Output:
+<!-- ================================================================== -->
 As seen in the above output, the inner join returns a result set that contains row in the left table that matches the row in the right table.
 The Venn diagram for INNER JOIN is as below:
 Left Join
@@ -1644,7 +2001,7 @@ SELECT
 FROM
     zoo_1
 LEFT JOIN zoo_2 ON zoo_1.animal = zoo_2.animal;
-Output:
+<!-- ================================================================== -->
 As seen in the output above the left join returns a complete set of rows from the left table with the matching rows if available from the right table. If there is no match, the right side will have null values.
 The Venn diagram for a LEFT JOIN is as below:
 Right Join
@@ -1658,7 +2015,7 @@ SELECT
 FROM
     zoo_1
 RIGHT JOIN zoo_2 ON zoo_1.animal = zoo_2.animal;
-Output:
+<!-- ================================================================== -->
 The Venn diagram for a RIGHT OUTER JOIN is below:
 Full Outer Join
 The full outer join or full join returns a result set that contains all rows from both the left and right tables, with the matching rows from both sides where available. If there is no match, the missing side contains null values.
@@ -1671,7 +2028,7 @@ SELECT
 FROM
     zoo_1
 FULL JOIN zoo_2 ON zoo_1.animal = zoo_2.animal;
-Output:
+<!-- ================================================================== -->
 The Venn diagram for a FULL OUTER JOIN is below:
 ```
 ## Working with JOINS & Schemas: PostgreSQL – LEFT JOIN
@@ -1702,7 +2059,7 @@ SELECT
 FROM
     film
 LEFT JOIN inventory ON inventory.film_id = film.film_id;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will use the LEFT JOIN clause to join the “film” table to the “inventory” table and use the WHERE clause to filter out films that are not in the inventory supply.
 SELECT
@@ -1746,7 +2103,7 @@ SELECT
 FROM
     customer
 INNER JOIN payment ON payment.customer_id = customer.customer_id;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will be joining the “customer” table to “payment” table using the INNER JOIN clause and sort them with the ORDER BY clause:
 SELECT
@@ -1761,7 +2118,7 @@ FROM
 INNER JOIN payment ON payment.customer_id = customer.customer_id
 ORDER BY
     customer.customer_id;
-Output:
+<!-- ================================================================== -->
 Example 3:
 Here we will be joining the “customer” table to “payment” table using the INNER JOIN clause and filter them with the WHERE clause:
 SELECT
@@ -1776,7 +2133,7 @@ FROM
 INNER JOIN payment ON payment.customer_id = customer.customer_id
 WHERE
     customer.customer_id = 15;
-Output:
+<!-- ================================================================== -->
 Example 4:
 Here we will establish the relationship between three tables: staff, payment, and customer using the INNER JOIN clause.
 SELECT
@@ -1822,7 +2179,7 @@ FROM
     film f
 FULL OUTER JOIN actor a 
         ON a.actor_id = f.film_id;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will make a query for all the films and the language of the movie using the “film” table and “language” table from our sample database.
 SELECT
@@ -1894,7 +2251,7 @@ FROM
 INNER JOIN employee m ON m .employee_id = e.manager_id
 ORDER BY
     manager;
-Output:
+<!-- ================================================================== -->
 Example 2:
 If you remember our Sample DVD rental database used in previous articles which is explained here and can be downloaded from here, we will be performing self join in the film table of that database. Here we will query for all pairs of films that have the same runtime.
 SELECT
@@ -1960,7 +2317,7 @@ FROM
     pg_catalog.pg_namespace
 ORDER BY 
     nspname;
-Output:
+<!-- ================================================================== -->
 Example 2:
 In this example, we will create a schema for a user (say, Raju). to do show let’s first create a user using the below statement:
 CREATE USER Raju WITH ENCRYPTED PASSWORD 'Postgres123';
@@ -1975,7 +2332,7 @@ FROM
     pg_catalog.pg_namespace
 ORDER BY 
     nspname;
-Output:
+<!-- ================================================================== -->
 ```
 ## Working with JOINS & Schemas: PostgreSQL – DROP SCHEMA
 %
@@ -1993,7 +2350,7 @@ This example uses the DROP SCHEMA statement to remove the marketing schema prese
 DROP SCHEMA IF EXISTS marketing;
 To verify so use the below statement:
 SELECT * FROM  pg_catalog.pg_namespace ORDER BY nspname;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following example uses the DROP SCHEMA statement to drop multiple schemas gfg and Raju using a single statement:
 DROP SCHEMA IF EXISTS gfg, raju;
@@ -2023,7 +2380,7 @@ FROM
     pg_catalog.pg_namespace
 ORDER BY 
     nspname;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following example uses the ALTER SCHEMA statement to change the owner of the schema gfg to from Raju to postgres:
 ALTER SCHEMA gfg
@@ -2093,7 +2450,7 @@ UNION
 SELECT *
 FROM
     sales2020q2;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will sort the combined result returned by the UNION operator in defending order of “id” by using the ORDER BY clause after combining the data from both sales2020q1 and salese2020q2 tables.
 SELECT *
@@ -2227,7 +2584,7 @@ EXCEPT
         inventory
     INNER JOIN film ON film.film_id = inventory.film_id
 ORDER BY title;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query for films that are only in the English Language (ie, language_id = 1) using EXCEPT operator from data of the “film” and “language” tables of our sample database and sort them using the ORDER BY clause based on the film title.
 SELECT
@@ -2391,7 +2748,7 @@ GROUP BY
 ORDER BY
     course_name,
     segment;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following query performs a partial CUBE as follows:
 SELECT
@@ -2451,7 +2808,7 @@ GROUP BY
 ORDER BY
     course_name,
     segment;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following statement performs a partial ROLL UP as follows:
 SELECT
@@ -2486,7 +2843,7 @@ WHERE length >= ANY(
     FROM film
     INNER JOIN film_category USING(film_id)
     GROUP BY  category_id );
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query for the films whose category is either Action(category_id = 1) or Drama(category_id = 7) from the “category” table of our sample database.
 SELECT
@@ -2535,7 +2892,7 @@ WHERE
     )
 ORDER BY
     length;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query for all films whose rental_rate is less than the list of the average rental_rate by using the ALL and less than operator(<).
 SELECT
@@ -2574,7 +2931,7 @@ WHERE EXISTS
        AND amount > 9 )
 ORDER BY first_name,
          last_name;
-Output:
+<!-- ================================================================== -->
 Example 2:
 Here we will query for films that are not available in the inventory using the “film” and “inventory” tables of our sample database.
 SELECT title
@@ -2623,7 +2980,7 @@ WHERE
     length = 'Long'
 ORDER BY 
     title;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following statement illustrates the use of the CTE with the RANK() window function in the film table to rank the films based on their length as follows:
 WITH cte_film AS  (
@@ -2641,7 +2998,7 @@ WITH cte_film AS  (
 SELECT *
 FROM cte_film
 WHERE length_rank = 1;
-Output:
+<!-- ================================================================== -->
 ```
 ## Subquery & CTEs: PostgreSQL – Deleting Duplicate Rows using Subquery
 %
@@ -2736,7 +3093,7 @@ SELECT
     ) AS average_amount
 FROM
     payment;
-Output:
+<!-- ================================================================== -->
 Note: We used the to_char() function to convert the result into a formatted string.
 Example 2:
 We will be using the payment table in the dvdrental sample database for demonstration. In this example we will query to know the average amount paid by each customer using the command below:
@@ -2775,14 +3132,14 @@ SELECT
    COUNT(*)
 FROM
    payment;
-Output:
+<!-- ================================================================== -->
 Example 2:
 In this example we will query for the distinct amounts which customers paid, using the COUNT(DISTINCT column) function as shown below:
 SELECT
     COUNT (DISTINCT amount)
 FROM
     payment;
-Output:
+<!-- ================================================================== -->
 Example 3:
 Here we will be using the COUNT() function to get the details of customers who have made more than 40 payments:
 SELECT
@@ -2806,7 +3163,7 @@ Example 1:
 The below query gets us the maximum amount paid by customers in the payment table:
 SELECT MAX(amount)
 FROM payment;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following query gets the largest payment paid by each customer:
 SELECT
@@ -2828,7 +3185,7 @@ Example 1:
 The below query gets us the minimum amount paid by customers in the payment table:
 SELECT MIN(amount)
 FROM payment;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following query gets the smallest payment paid by each customer:
 SELECT
@@ -2858,7 +3215,7 @@ FROM
     payment
 GROUP BY
     customer_id;
-Output:
+<!-- ================================================================== -->
 Example 2:
 In this example we will query for the top 10 customers who paid the most as follows:
 SELECT
@@ -2930,7 +3287,7 @@ SELECT
     ) lowest_lifespan
 FROM 
     Mammals;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The below statement uses the FIRST_VALUE() function to return all mammals grouped by the animal group. And for each animal group, it returns the mammal with the lowest lifespan:
 SELECT 
@@ -3010,7 +3367,7 @@ SELECT
     ) longest_lifespan
 FROM 
     Mammals;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following query uses the LAST_VALUE() function to return all mammals together with the mammal with longest lifespan per animal group:
 SELECT 
@@ -3093,7 +3450,7 @@ SELECT
     )
 FROM 
     products;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The below statement uses the NTH_VALUE() function to return all products with the second most expensive product for each product group:
 SELECT 
@@ -3167,7 +3524,7 @@ SELECT
         )
 FROM
     Mammals;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following query uses the ROW_NUMBER() function to assign integers to the distinct prices from the products table:
 SELECT DISTINCT
@@ -3188,7 +3545,7 @@ The CURRENT_DATE function returns a DATE value that represents the current date.
 Example 1:
 The following statement shows how to use the CURRENT_DATE function to get the current date:
 SELECT CURRENT_DATE;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The CURRENT_DATE function can be used as a default value of a column. So create a table named delivery for demonstration:
 CREATE TABLE delivery(
@@ -3213,11 +3570,11 @@ The CURRENT_TIME function returns a TIME WITH TIME ZONE value. This value is not
 Example 1:
 The following statement can be used to get the current time:
 SELECT CURRENT_TIME;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following statement shows the process of using the CURRENT_TIME function with the precision of 2:
 SELECT CURRENT_TIME(2);
-Output:
+<!-- ================================================================== -->
 Example 3:
 The CURRENT_TIME function can also be used as the default value of the TIME columns. To demonstrate this, create a table named log:
 CREATE TABLE log (
@@ -3243,11 +3600,11 @@ The source is generally either a TIMESTAMP type or an INTERVAL type. Depending u
 Example 1:
 The below statement extracts year from a timestamp:
 SELECT EXTRACT(YEAR FROM TIMESTAMP '2020-12-31 13:30:15');
-Output:
+<!-- ================================================================== -->
 Example 2:
 The below statement extracts the quarter from a timestamp:
 SELECT EXTRACT(QUARTER FROM TIMESTAMP '2020-12-31 13:30:15');
-Output:
+<!-- ================================================================== -->
 Example 3:
 The below statement extracts month from a timestamp:
 SELECT EXTRACT(MONTH FROM TIMESTAMP '2020-12-31 13:30:15');
@@ -3265,7 +3622,7 @@ Example 1:
 The below statement uses the CONCAT function to concatenate three strings into one:
 SELECT
  CONCAT ('Geeks', 'for', 'geeks');
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following statement concatenates values in the first_name and last_name columns of the actor table in the sample database, ie, dvdrental.
 SELECT
@@ -3312,7 +3669,7 @@ The FORMAT() function returns a formatted string.
 Example 1:
 The following statement uses the FORMAT() function to format a string:
 SELECT FORMAT('Hello, %s', 'Geeks!!');
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following statement uses the FORMAT() function to construct customer’s full names from first names and last names from the customers table of the sample database, ie, dvdrental:
 SELECT 
@@ -3337,7 +3694,7 @@ SELECT
     ) as full_name
 FROM
     staff;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The following statement converts a lower case string to an upper case format:
 SELECT UPPER('geeksforgeeks');
@@ -3353,7 +3710,7 @@ If the supplied argument is string-convertible, one can make use of the CAST fun
 Example 1:
 The below statement uses LOWER function to get the full names of the films from the Film table of the sample database, ie, dvdrental:
 SELECT LOWER(title) from film;
-Output:
+<!-- ================================================================== -->
 Example 2:
 The below statement converts an upper case string to lower case:
 SELECT LOWER('GEEKSFORGEEKS');
@@ -3376,7 +3733,7 @@ SELECT
     REGEXP_MATCHES('Learning #Geeksforgeeks #geekPower', 
          '#([A-Za-z0-9_]+)', 
         'g');
-Output:
+<!-- ================================================================== -->
 Example 2:
 This is common for all patterns that can be matched using the Regular Expressions as shown in the below example:
 SELECT REGEXP_MATCHES('ABC', '^(A)(..)$', 'g');
@@ -3399,7 +3756,7 @@ And you want to rearrange the name as follows:
 last_name, first_name
 To do this, you can use the REGEXP_REPLACE() function as shown below:
 SELECT REGEXP_REPLACE('Raju Kumar', '(.*) (.*)', '\2, \1');
-Output:
+<!-- ================================================================== -->
 Example 2:
 Suppose you have data in the form of a string. This string is mixed with alphabets and digits as follows:
 ABC12345xyz
@@ -3423,7 +3780,7 @@ SELECT
         'tt',
         'xx'
     );
-Output:
+<!-- ================================================================== -->
 Example 2:
 The below statement updates the email column to replace the domain ‘sakilacustomer.org’ with ‘geeksforgeek.org’, in the customer table of the sample database, ie, dvdrental:
 UPDATE 
