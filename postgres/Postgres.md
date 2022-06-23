@@ -830,51 +830,54 @@ Syntax:
 SELECT column_1, aggregate_function (column_2) FROM tbl_name
 {{c1:GROUP}} BY column_1 {{c1:HAVING}} {{c1:condition}};
 
-In the above syntax the aggregate_function represents functions like SUM(), COUNT() etc.
-The HAVING clause provides the condition for group rows created by the GROUP BY clause.
-The WHERE clause sets the condition fro each row before the GROUP BY clause is applied.
+In the above syntax the {{c1:aggregate_function}} represents functions like SUM(), COUNT() etc.
+The HAVING clause provides the {{c1:condition}} for group rows created by the GROUP BY clause.
+The WHERE clause sets the {{c1:condition}} for each row {{c1:before}} the GROUP BY clause is applied.
+
 Example 1: Here we will query to selects the only customer who has been spending more than 200 USD using the HAVING clause in the “payment” table of our sample database.
-SELECT customer_id, SUM (amount) FROM payment
-GROUP BY customer_id
-HAVING SUM (amount) > 200;
+SELECT customer_id, SUM(amount) FROM payment
+{{c1:GROUP}} {{c1:BY}} customer_id
+{{c1:HAVING}} SUM(amount) > 200;
 <!-- ================================================================== -->
 Example 2: Here we will query to select the stores that has more than 200 customers using the HAVING clause in the “customer” table of our sample database.
-SELECT store_id, COUNT (customer_id) FROM customer
-GROUP BY store_id
-HAVING COUNT (customer_id) > 200;
+SELECT store_id, COUNT(customer_id) FROM customer
+{{c1:GROUP}} {{c1:BY}} store_id
+{{c1:HAVING}} COUNT(customer_id) > 200;
 ```
 ## Querying & Filtering Data: PostgreSQL – GROUP BY clause
 %
 ```text
-The PostgreSQL GROUP BY clause is used to divide rows returned by SELECT statement into different groups. The speciality of GROUP BY clause is that one can use Functions like SUM() to calculate the sum of items or COUNT() to get the total number of items in the groups.
+The PostgreSQL GROUP BY clause is used to {{c1:divide}} rows returned by SELECT statement into different {{c1:groups}}. The speciality of GROUP BY clause is that one {{c1:can}} use Functions like SUM() to calculate the sum of items or COUNT() to get the total number of items in the groups.
 Syntax:
-SELECT column_1, column_2, computing_function(column_3) FROM table_name
-GROUP BY column_1, column_2;
-It is important to note that The GROUP BY clause must exactly appear after the FROM or WHERE clause.
+SELECT column_1, column_2, {{c1:computing_function}}(column_3) FROM table_name
+{{c1:GROUP}} {{c1:BY}} column_1, column_2;
+
+It is important to note that The GROUP BY clause must exactly appear after the {{c1:FROM}} or {{c1:WHERE}} clause.
 Example 1: Here we will query for data from the payment table and group the result by customer id from the “payment” table of our sample database.
 SELECT customer_id FROM payment
 GROUP BY customer_id;
 <!-- ================================================================== -->
 Example 2: Here we will query to get the amount that each customer has paid till date and use an aggregate function (ie SUM()), to do so and group them by customer_id from the “payment” table of the sample database.
-SELECT customer_id, SUM (amount) FROM payment
-GROUP BY customer_id;
+SELECT customer_id, {{c1:SUM}}(amount) FROM payment
+GROUP BY {{c1:customer_id}};
 <!-- ================================================================== -->
 Example 3: here we will make a query to count the number of payment transactions that each staff has been processing, you group the rows in the payment table based on staff_id and use the COUNT() function to get the number of transactions.
-SELECT staff_id, COUNT (payment_id) FROM payment
-GROUP BY staff_id;
+SELECT staff_id, {{c1:COUNT}} (payment_id) FROM payment
+GROUP BY {{c1:staff_id}};
 ```
 ## Modifying Data: PostgreSQL – INSERT
 %
 ```text
-In PostgreSQL, the INSERT statement is used to add new rows to a database table. As one creates a new database, it has no data initially. PostgreSQL provides the INSERT statement to insert data into the database.
+In PostgreSQL, the INSERT statement is used to {{c1:add}} new rows to a database table. As one creates a new database, it has no data initially. PostgreSQL provides the INSERT statement to insert data into the database.
 Syntax:
-INSERT INTO table(column1, column2, …)
-VALUES
+{{c1:INSERT}} {{c1:INTO}} {{c1:table}}(column1, column2, …)
+{{c1:VALUES}}
 	(value1, value2, …);
 The below rules must be followed while using the PostgreSQL INSERT statement:
-First thing to do is specify the table name followed by the columns where you want to insert the data or rows.
-Secondly, you must list a comma-separated value list after the VALUES clause. The value list must be in the same order as the columns list specified after the table name.
+First thing to do is specify the table name followed by the {{c1:columns}} where you want to insert the data or rows.
+Secondly, you must list a {{c1:comma-separated}} value list after the VALUES clause. The value list must be in the {{c1:same}} order as the columns list specified after the table name.
 Create a database named “company” with the below command:
+// todo: create table
 CREATE DATABASE company;
 Add a table of “employee” to show the company hierarchy into the database using the below command:
 CREATE TABLE employee (
@@ -904,6 +907,7 @@ VALUES
 	(7, 'Virat', 'Kohli', 3),
 	(8, 'Rohit', 'Sharma', 3);
 In the above example we inserted multiple rows to the company database, whereas in this example we will add a single row to the database.
+
 INSERT INTO employee (
 	employee_id,
 	first_name,
@@ -914,45 +918,48 @@ VALUES (9, 'Mohit', 'Verma', 3);
 <!-- ================================================================== -->
 Now check for the newly added employee using the below command:
 SELECT * FROM employee;
-Now the overall hierarchy looks like the below image:
 ```
 ## Modifying Data: PostgreSQL – Insert multiple rows
 %
 ```text
 In general, we use the INSERT statement to insert values in a database. Just an improvised version of the same statement can be used to insert multiple values in various rows of a database as shown in the syntax below:
 Syntax :
-##When specifying Column Names
-Insert into tableName (col1, col2) values (value,value),(value,value),(value,value);
+## When specifying Column Names
+Insert into tableName (col1, col2) values (value,value){{c1:,}}(value,value){{c1:,}}(value,value);
 ```
 ## when not specifying Column Names
 %
 ```text
-Insert into tableName  values (value,value),(value,value),(value,value);
+{{c1:Insert}} {{c1:into}} tableName  {{c1:values}} (value,value){{c1:,}}(value,value){{c1:,}}(value,value);
 Approach :
-Our database name is geeksforgeeks and the table name is gfg at the beginning there is no data inside the table. For selecting the database we will use query  \c databaseName.
-For checking the data inside the table we will use query select *from tableName.
-Now for inserting values, we will use the table name and the column names and the records to be inserted will be separated by comma(“‘”).
-The query will be Insert into tableName (col1, col2) values (value,value),(value,value),(value,value).
+Our database name is geeksforgeeks and the table name is gfg at the beginning there is no data inside the table. For selecting the database we will use query  {{c1:\c}} {{c1:databaseName}}.
+For checking the data inside the table we will use query 
+select * from tableName.
+Now for inserting values, we will use the table name and the column names and the records to be inserted will be separated by {{c1:comma}} ({{c1:,}}).
+The query will be 
+{{c1:Insert}} {{c1:into}} {{c1:tableName}} (col1, col2) {{c1:values}} (value,value){{c1:,}}(value,value){{c1:,}}(value,value).
 If you want to insert without the column names then the query will be a different one than the above query.
-Insert into tableName  values (value,value),(value,value),(value,value) . But one thing should be remembered here that in this case, the order of the values being inserted should be the same as that of in the database and all the mandatory columns must be inserted.
-Now again we will check for records inside the table using select*from tableName.
-Example 1 : In this example, we first selected the database using the \c geeksforgeeks command, and then we looked into the database table records then we inserted the multiples record inside the table then again look inside the database tables. The steps followed are to select the database and then look into the table records then insert multiple values and then again look into the table records.
-Example 2 : Here in this example, we will insert the rows without using the column names but one thing to note about this approach is if you are not giving the column names the order of values being inserted will be the same as that of in the table and all the mandatory columns must be filled in the table otherwise there will be an exception. After inserting the data we will again look into the database table.
+{{c1:Insert}} {{c1:into}} {{c1:tableName}}  values (value,value){{c1:,}}(value,value){{c1:,}}(value,value) 
+But one thing should be remembered here that in this case, the order of the values being inserted should be the {{c1:same}} as that of in the database and all the mandatory columns must be inserted.
+Now again we will check for records inside the table using 
+select * from tableName
+Example 1 : In this example, we first selected the database using the {{c1:\c}} {{c1:geeksforgeeks}} command, and then we looked into the database table records then we inserted the multiples record inside the table then again look inside the database tables. The steps followed are to select the database and then look into the table records then insert multiple values and then again look into the table records.
+Example 2 : Here in this example, we will insert the rows without using the column names but one thing to note about this approach is if you are not giving the column names the order of values being inserted will be the same as that of in the table and all the mandatory columns must be filled in the table otherwise there will be an {{c1:exception}}. After inserting the data we will again look into the database table.
 ```
 ## Modifying Data: PostgreSQL – UPDATE
 %
 ```text
-PostgreSQL has an UPDATE statement that is used to update or modify an existing data in the table.
+PostgreSQL has an UPDATE statement that is used to {{c1:update}} or {{c1:modify}} an existing data in the table.
 Syntax:
-UPDATE table
-SET column1 = value1, column2 = value2, ...
-WHERE condition;
-Let’s analyze the above syntax:
-First step is to specify the table where the changes are supposed to be made.
-Then we list the columns whose value is to be updated using the SET clause.
-The final step is to determine which rows you want to update exactly using the WHERE clause.
-Let’s set up a sample database and table for the demonstration of UPDATE statement.
+{{c1:UPDATE}} {{c1:table}}
+{{c1:SET}} {{c1:column1}} = value1, {{c1:column2}} = value2, ...
+{{c1:WHERE}} {{c1:condition}};
+
+First step is to specify the {{c1:table}} where the changes are supposed to be made.
+Then we list the columns whose value is to be updated using the {{c1:SET}} clause.
+The final step is to determine which rows you want to update exactly using the {{c1:WHERE}} clause.
 Create a database named “company” with the below command:
+// todo: create table
 CREATE DATABASE company;
 Add a table of “employee” to show the company hierarchy into the database using the below command:
 CREATE TABLE employee (
@@ -981,30 +988,27 @@ VALUES
 	(7, 'Virat', 'Kohli', 3),
 	(8, 'Rohit', 'Sharma', 3);
 The value in the manager_id column represents the senior manager who the employee reports to. If it’s Null, he/she doesn’t report to anyone.
-The overall hierarchy looks like the below image:
-Our current tables looks like below:
-Now let’s update data in the above mentioned table.
 Example 1: Here we will update the employee “Raju Kumar” name to “Raju Singh” using the UPDATE statement.
 UPDATE employee 
-SET last_name = 'Singh'
-WHERE first_name = 'Raju';
+{{c1:SET}} {{c1:last_name}} = 'Singh'
+{{c1:WHERE}} {{c1:first_name}} = 'Raju';
 <!-- ================================================================== -->
 Example 2: In the above we made an update to a single row, but here we will make changes to multiple rows. Here we will change the last name of everyone to ‘Gupta’ whose last name is ‘Aggarwal’.
 UPDATE employee
-SET last_name = 'Gupta'
-WHERE last_name = 'Aggarwal';
+{{c1:SET}} {{c1:last_name}} = 'Gupta'
+{{c1:WHERE}} {{c1:last_name}} = 'Aggarwal';
 ```
 ## Modifying Data: PostgreSQL – DELETE
 %
 ```text
-To delete data from a table PostgreSQL has a DELETE statement.
+To {{c1:delete}} data from a table PostgreSQL has a DELETE statement.
 Syntax: 
-DELETE FROM table
-WHERE condition;
-The below rules need to be followed while using the DELETE statement:
-First, specify the table from which you want to delete data in the DELETE FROM clause.
-Second, specify which rows to delete by using the condition in the WHERE clause. The WHERE clause is optional. However, if you omit it, the DELETE statement will delete all rows in the table.
-Let’s set up a sample database and table for the demonstration of DELETE statement.
+{{c1:DELETE}} {{c1:FROM}} {{c1:table}}
+{{c1:WHERE}} {{c1:condition}};
+
+First, specify the {{c1:table}} from which you want to delete data in the DELETE FROM clause.
+Second, specify which {{c1:rows}} to delete by using the condition in the {{c1:WHERE}} clause. The WHERE clause is {{c1:optional}}. However, if you omit it, the DELETE statement will delete {{c1:all}} rows in the table.
+// todo: create table
 Create a database named “company” with the below command:
 CREATE DATABASE company;
 Add a table of “employee” to show the company hierarchy into the database using the below command:
@@ -1034,40 +1038,37 @@ VALUES
 	(7, 'Virat', 'Kohli', 3),
 	(8, 'Rohit', 'Sharma', 3);
 The value in the manager_id column represents the senior manager who the employee reports to. If it’s Null, he/she doesn’t report to anyone.
-The overall hierarchy looks like the below image:
-The current database tables look like below:
 Example 1: Here we will be deleting the employee data whose first name is “Raju”.
-DELETE FROM employee
-WHERE first_name = 'Raju';
+{{c1:DELETE}} {{c1:FROM}} employee
+{{c1:WHERE}} {{c1:first_name}} = 'Raju';
 <!-- ================================================================== -->
 Example 2: Here we will delete multiple rows from the “employee” table. We will be deleting the data of the employee named “Abhishek Kelenia” and employees who work under him.
-DELETE FROM employee
-WHERE last_name = 'Kelenia';
+{{c1:DELETE}} {{c1:FROM}} employee
+{{c1:WHERE}} {{c1:last_name}} = 'Kelenia';
 ```
 ## Modifying Data: PostgreSQL – Upsert
 %
 ```text
-The UPSERT statement is a DBMS feature that allows a DML statement’s author to either insert a row or if the row already exists, UPDATE that existing row instead. That is why the action is known as UPSERT (simply a mix of Update and Insert).To achieve the functionality of UPSERT, PostgreSQL uses the INSERT ON CONFLICT statement.
+The UPSERT statement is a {{c1:DBMS}} feature that allows a {{c1:DML}} statement’s author to either insert a row or if the row {{c1:already}} {{c1:exists}}, {{c1:UPDATE}} that existing row instead. That is why the action is known as UPSERT (simply a mix of Update and Insert).To achieve the functionality of UPSERT, PostgreSQL uses the INSERT {{c1:ON}} {{c1:CONFLICT}} statement.
 Syntax:
-INSERT INTO table_name(column_list)  
-VALUES(value_list)
-ON CONFLICT target action;
-If we analyze the above syntax:
+{{c1:INSERT}} {{c1:INTO}} {{c1:table_name}}(column_list)  
+{{c1:VALUES}}(value_list)
+{{c1:ON}} {{c1:CONFLICT}} {{c1:target}} {{c1:action}};
+
 The target can be :
 (column_name) – any column name.
-ON CONSTRAINT constraint_name – where the constraint name could be the name of the UNIQUE constraint.
- WHERE predicate  – a WHERE clause with a boolean condition.
+ON CONSTRAINT constraint_name – where the constraint name could be the name of the {{c1:UNIQUE}} constraint.
+ WHERE predicate  – a WHERE clause with a {{c1:boolean}} condition.
 The action can be :
-DO NOTHING – If the row already exists in the table, then do nothing.
-DO UPDATE SET columnA = valueA, …. WHERE condition – update some fields in the table depending upon the condition.
+{{c1:DO}} {{c1:NOTHING}} – If the row already exists in the table, then do nothing.
+{{c1:DO}} {{c1:UPDATE}} {{c1:SET}} {{c1:columnA}} = valueA, …. WHERE condition – update some fields in the table depending upon the condition.
 
-First, we create a sample table using the below commands to perform examples:
+// todo: create table
 CREATE TABLE employees (
  employee_id serial PRIMARY KEY,
  full_name VARCHAR NOT NULL,
  manager_id INT
 );
-Then we insert data into our employee table as follows:
 INSERT INTO employees (
  employee_id,
  full_name,
@@ -1094,32 +1095,31 @@ VALUES
  (18, 'Yuzvendra Chahal', 8),
  (19, 'Rishabh Pant', 8),
  (20, 'Sanju Samson', 8);
-The table is:
 Example 1: The below query is used to change the name of employee_id 6 (if such an employee exists) from Y. Singh to Yuvraj Singh or insert the record if such an employee does not exist.
+
 insert into employees(employee_id,full_name)
 values(6,'Yuvraj Singh')
-on conflict(employee_id)
-do
-update set full_name=EXCLUDED.full_name; 
+{{c1:on}} {{c1:conflict}}(employee_id)
+{{c1:do}}
+{{c1:update}} {{c1:set}} full_name={{c1:EXCLUDED}}.{{c1:full_name}}; 
+<!-- ================================================================== -->
 To check the changes to the table, we use the following query:
 select * from employees;
 <!-- ================================================================== -->
 In this example, we tried to use the UPDATE clause as the action of the INSERT statement to update the name of the employee with ID 6 if the employee exists. 
 Example 2: The below query is used to insert an employee with employee id 18 with the name ‘W. Sundar’ and manager id ‘6’ (if no record exists) but do nothing, in case, such a record is already present in the table.  
-insert into employees(employee_id,full_name,manager_id)
-values(18,'W. Sundar',6)
-on conflict (employee_id)
-do nothing;
-To check the changes to the table, we use the following query:
+
+insert into employees(employee_id,full_name,manager_id) values(18,'W. Sundar',6)
+{{c1:on}} {{c1:conflict}} (employee_id) {{c1:do}} {{c1:nothing}};
+
 select * from employees;
 <!-- ================================================================== -->
 In this example, nothing was changed in the table because employee with employee id 18 already exists and the action is to do nothing. 
 Example 3: The below query is used to insert an employee with employee id 21 with the name ‘W. Sundar’ and manager id ‘6’ ( if no record exists ) but do nothing, in case, such a record is already present in the table. 
-insert into employees(employee_id,full_name,manager_id)
-values(21,'W. Sundar',6)
-on conflict (employee_id)
-do nothing; 
-To check the changes to the table, we use the following query:
+
+insert into employees(employee_id,full_name,manager_id) values(21,'W. Sundar',6)
+{{c1:on}} {{c1:conflict}} (employee_id) {{c1:do}} {{c1:nothing}}; 
+
 select * from employees;
 <!-- ================================================================== -->
 In this example, a new record was inserted into the table as no existing employee was present in the table with employee id 21
@@ -1127,67 +1127,68 @@ In this example, a new record was inserted into the table as no existing employe
 ## Conditionals: PostgreSQL – CASE
 %
 ```text
-PostgreSQL has a conditional expression called CASE to form conditional queries. The PostgreSQL CASE expression is the same as IF/ELSE statement in other programming languages. PostgreSQL provides two forms of the CASE expressions.
+PostgreSQL has a conditional expression called CASE to form {{c1:conditional}} queries. The PostgreSQL CASE expression is the same as {{c1:IF}}/{{c1:ELSE}} statement in other programming languages. PostgreSQL provides {{c1:two}} forms of the CASE expressions.
 Syntax:
-CASE 
-	  WHEN condition_1  THEN result_1
+{{c1:CASE}} 
+	  {{c1:WHEN}} {{c1:condition_1}}  {{c1:THEN}} {{c1:result_1}}
 	  WHEN condition_2  THEN result_2
-	  [WHEN ...]
-	  [ELSE result_n]
-END
-For examples we will be using the sample database (ie, dvdrental).
+	  [{{c1:WHEN}} ...]
+	  [{{c1:ELSE}} result_n]
+{{c1:END}}
 Example 1: Here we will work on the film table of the sample database. Suppose you want to assign a price segment to a film with the following logic:
 Mass if the rental rate is 0.99
 Economic if the rental rate is 1.99
 Luxury if the rental rate is 4.99
 We will query for number of films in each segment using the below statement:
 SELECT
-	SUM (
-		CASE
-		WHEN rental_rate = 0.99 THEN
+	{{c1:SUM}} (
+		{{c1:CASE}}
+		{{c1:WHEN}} rental_rate = 0.99 {{c1:THEN}}
 			1
-		ELSE
+		{{c1:ELSE}}
 			0
-		END
+		{{c1:END}}
 	) AS "Mass",
-	SUM (
-		CASE
-		WHEN rental_rate = 2.99 THEN
+	{{c1:SUM}} (
+		{{c1:CASE}}
+		{{c1:WHEN}} rental_rate = 2.99 {{c1:THEN}}
 			1
-		ELSE
+		{{c1:ELSE}}
 			0
-		END
+		{{c1:END}}
 	) AS "Economic",
-	SUM (
-		CASE
-		WHEN rental_rate = 4.99 THEN
+	{{c1:SUM}} (
+		{{c1:CASE}}
+		{{c1:WHEN}} rental_rate = 4.99 {{c1:THEN}}
 			1
-		ELSE
+		{{c1:ELSE}}
 			0
-		END
+		{{c1:END}}
 	) AS "Luxury"
 FROM
 	film;
 <!-- ================================================================== -->
 Example 2: PostgreSQL provides another form of the CASE expression called simple form as follows:
-CASE expression
-WHEN value_1 THEN
+
+{{c1:CASE}} {{c1:expression}}
+{{c1:WHEN}} value_1 {{c1:THEN}}
 	result_1
-WHEN value_2 THEN
+{{c1:WHEN}} value_2 {{c1:THEN}}
 	result_2 
-[WHEN ...]
-ELSE
+[{{c1:WHEN}} ...]
+{{c1:ELSE}}
 	result_n
-END;
+{{c1:END}};
+
 We can rewrite the general CASE expression using the simple CASE as follows:
-SELECT
-	SUM (
-		CASE rental_rate
-		WHEN 0.99 THEN
+{{c1:SELECT}}
+	{{c1:SUM}} (
+		{{c1:CASE}} rental_rate
+		{{c1:WHEN}} 0.99 {{c1:THEN}}
 			1
-		ELSE
+		{{c1:ELSE}}
 			0
-		END
+		{{c1:END}}
 	) AS "Mass",
 	SUM (
 		CASE rental_rate
@@ -1213,49 +1214,44 @@ The query returns the same result as the first CASE example.
 ## Conditionals: PostgreSQL – COALESCE
 %
 ```text
-In PostgreSQL, the COALESCE function returns the first non-null argument. It is generally used with the SELECT statement to handle null values effectively.
-Syntax: COALESCE (argument_1, argument_2, …);
-The COALESCE function accepts an unlimited number of arguments. It returns the first argument that is not null. If all arguments are null, the COALESCE function will return null. he COALESCE function evaluates arguments from left to right until it finds the first non-null argument. All the remaining arguments from the first non-null argument are not evaluated.
+In PostgreSQL, the COALESCE function returns the {{c1:first}} {{c1:non-null}} {{c1:argument}}. It is generally used with the SELECT statement to handle {{c1:null}} values effectively.
+Syntax: {{c1:COALESCE}} ({{c1:argument_1}}, {{c1:argument_2}}, …);
+
+The COALESCE function accepts an {{c1:unlimited}} number of arguments. It returns the first argument that is {{c1:not}} {{c1:null}}. If all arguments are null, the COALESCE function will return {{c1:null}}. he COALESCE function evaluates arguments from {{c1:left}} to {{c1:right}} until it finds the first {{c1:non-null}} argument. All the remaining arguments from the first non-null argument are {{c1:not}} {{c1:evaluated}}.
 Example: For the purpose of demonstration let’s first create a table (say, items) using the below statement:
+// todo: create table
 CREATE TABLE items (
 	ID serial PRIMARY KEY,
 	product VARCHAR (100) NOT NULL,
 	price NUMERIC NOT NULL,
 	discount NUMERIC
 );
-There are four fields in the items table:
-id: the primary key that identifies the item in the items table.
-product: the product name.
-price: the price of the product.
-discount: the discount of the product.
-Now we insert some records into the items table using INSERT statement as follows:
 INSERT INTO items (product, price, discount)
 VALUES
 	('A', 1000, 10),
 	('B', 1500, 20),
 	('C', 800, 5),
 	('D', 500, NULL);
-Finally we query the net prices of the products using the following:
 SELECT
 	product,
-	(price - discount) AS net_price
+	({{c1:price}} - {{c1:discount}}) AS net_price
 FROM
 	items;
-This will lead to the following:
+
 f you look at the fourth row, you will notice that the net price of the product D is null which seems not correct. The issue is the discount of the product D is null, therefore when we take the null value to calculate the net price, PostgreSQL returns null. The get the right price, we need to assume that if the discount is null, it is zero. Then we can use the COALESCE function as follows:
 SELECT
 	product,
-	(price - COALESCE(discount, 0)) AS net_price
+	(price - {{c1:COALESCE}}({{c1:discount}}, {{c1:0}})) AS net_price
 FROM
 	items;
 ```
 ## Conditionals: PostgreSQL – NULLIF() Function
 %
 ```text
-PostgreSQL has a NULLIF function to handle null values. The NULLIF function is one of the most common conditional expressions provided by PostgreSQL.
-Syntax:NULLIF(argument_1,argument_2);
-The NULLIF function returns a null value if argument_1 equals to argument_2, otherwise it returns argument_1.
-Example : First, we create a table named posts as follows:
+PostgreSQL has a NULLIF function to {{c1:handle}} {{c1:null}} {{c1:values}}. The NULLIF function is one of the most common conditional {{c1:expressions}} provided by PostgreSQL.
+Syntax:{{c1:NULLIF}}({{c1:argument_1}},{{c1:argument_2}});
+The NULLIF function returns a {{c1:null}} value if argument_1 {{c1:equals}} to argument_2, {{c1:otherwise}} it returns argument_1.
+// todo: create table
 CREATE TABLE posts (
   id serial primary key,
 	title VARCHAR (255) NOT NULL,
@@ -1264,7 +1260,6 @@ CREATE TABLE posts (
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP
 );
-Now we insert some sample data to the table as follows:
 INSERT INTO posts (title, excerpt, body)
 VALUES
 	  ('test post 1','test post excerpt 1','test post body 1'),
@@ -1277,23 +1272,25 @@ SELECT
 	excerpt
 FROM
 	posts;
+
 This leads to the following:
 nullif
 The null value in the excerpt column. To substitute this null value, we can use the COALESCE function as follows:
+
 SELECT
 	id,
 	title,
-	COALESCE (excerpt, LEFT(body, 40))
+	{{c1:COALESCE}} ({{c1:excerpt}}, {{c1:LEFT}}({{c1:body}}, {{c1:40}}))
 FROM
 	posts;
-This will result in the following:
-Unfortunately, there is a mix between null value and ” (empty) in the excerpt column. This is why we need to use the NULLIF function:
+
+This will result in the following: Unfortunately, there is a mix between null value and ” (empty) in the excerpt column. This is why we need to use the NULLIF function:
 SELECT
 	id,
 	title,
-	COALESCE (
-		NULLIF (excerpt, ''),
-		LEFT (body, 40)
+	{{c1:COALESCE}} (
+		{{c1:NULLIF}} ({{c1:excerpt}}, {{c1:''}}),
+		{{c1:LEFT}} ({{c1:body}}, 40)
 	)
 FROM
 	posts;
@@ -1303,59 +1300,60 @@ nullif
 ## Conditionals: PostgreSQL – CAST
 %
 ```text
-PostgreSQL supports a CAST operator that is used to convert a value of one type to another.
-Syntax: CAST ( expression AS target_type );
-Let’s analyze the above syntax:
-First, specify an expression that can be a constant, a table column, an expression that evaluates to a value.
-Then, specify the target data type to which you want to convert the result of the expression.
+PostgreSQL supports a CAST operator that is used to {{c1:convert}} a value of one type to another.
+Syntax: {{c1:CAST}} ( {{c1:expression}} AS {{c1:target_type}} );
+
+First, specify an {{c1:expression}} that can be a {{c1:constant}}, a table {{c1:column}}, an expression that evaluates to a {{c1:value}}.
+Then, specify the {{c1:target}} data type to which you want to convert the result of the expression.
 Example 1: The following statement converts a string constant to an integer:
 SELECT
- CAST ('100' AS INTEGER);
+ {{c1:CAST}} ('100' AS {{c1:INTEGER}});
 <!-- ================================================================== -->
 psql cast
 If the expression cannot be converted to the target type, PostgreSQL will raise an error. See the following:
 SELECT
  CAST ('10C' AS INTEGER);
-This will result to the below-depicted error:
+This will result to the below-{{c1:depicted}} error:
 psql cast
 Example 2: This example uses the CAST to convert a string to a date:
 SELECT
-   CAST ('2020-01-01' AS DATE),
-   CAST ('01-OCT-2020' AS DATE);
+   CAST ('2020-01-01' AS {{c1:DATE}}),
+   CAST ('01-OCT-2020' AS {{c1:DATE}});
 <!-- ================================================================== -->
 psql cast
 Example 3: This example uses the CAST() to convert the string ‘true’, ‘T’ to true and ‘false’, ‘F’ to false:
 SELECT 
-   CAST('true' AS BOOLEAN),
-   CAST('false' as BOOLEAN),
-   CAST('T' as BOOLEAN),
-   CAST('F' as BOOLEAN);
+   CAST('true' AS {{c1:BOOLEAN}}),
+   CAST('false' as {{c1:BOOLEAN}}),
+   CAST('T' as {{c1:BOOLEAN}}),
+   CAST('F' as {{c1:BOOLEAN}});
 ```
 ## Control Flow: PostgreSQL – IF Statement
 %
 ```text
-PostgreSQL has an IF statement executes `statements` if a condition is true. If the condition evaluates to false, the control is passed to the next statement after the END IF part.
+PostgreSQL has an IF statement executes `{{c1:statements}}` if a condition is true. If the condition evaluates to false, the control is passed to the {{c1:next}} statement after the END IF part.
 Syntax:
-IF condition THEN
-   statements;
-END IF;
-The above conditional statement is a boolean expression that evaluates to either true or false.
+{{c1:IF}} {{c1:condition}} {{c1:THEN}}
+   {{c1:statements}};
+{{c1:END}} {{c1:IF}};
+
+The above conditional statement is a boolean {{c1:expression}} that evaluates to either true or false.
 Example 1: In this example, we declare two variables a and b. In the body of the block, we compare the value of a and b using the comparison operator >, < and = in the boolean expressions of the IF statements.
-DO $$
-DECLARE
-  a integer := 10;
-  b integer := 20;
-BEGIN 
-  IF a > b THEN
-	RAISE NOTICE 'a is greater than b';
-  END IF;
+{{c1:DO}} $$
+{{c1:DECLARE}}
+  a {{c1:integer}} {{c1::=}} 10;
+  b {{c1:integer}} {{c1::=}} 20;
+{{c1:BEGIN}} 
+  {{c1:IF}} a > b {{c1:THEN}}
+	{{c1:RAISE}} {{c1:NOTICE}} 'a is greater than b';
+  {{c1:END}} {{c1:IF}};
   IF a < b THEN
 	RAISE NOTICE 'a is less than b';
   END IF;
   IF a = b THEN
 	RAISE NOTICE 'a is equal to b';
   END IF;
-END $$;
+{{c1:END}} $$;
 <!-- ================================================================== -->
 Example 2:
 DO $$
@@ -1376,22 +1374,24 @@ END $$;
 ## Control Flow: PostgreSQL – CASE Statement
 %
 ```text
-PostgreSQL provides you with CASE statements that allow you to execute a block of code conditionally. There are two forms of the CASE statement: 
-Simple CASE statement
-Searched CASE statement
-Simple CASE statement
-Syntax:
-CASE search-expression
-   WHEN expression_1 [, expression_2, ...] THEN
-	  when-statements
+PostgreSQL provides you with CASE statements that allow you to execute a block of code {{c1:conditionally}}. There are two forms of the CASE statement: 
+{{c1:Simple}} CASE statement
+{{c1:Searched}} CASE statement
+
+Simple CASE statement Syntax:
+{{c1:CASE}} {{c1:search}}-expression
+   {{c1:WHEN}} {{c1:expression_1}} [, {{c1:expression_2}}, ...] {{c1:THEN}}
+	  {{c1:when}}-statements
   [ ... ]
-  [ELSE
-	  else-statements ]
-END CASE;
-The search-expression is an expression that will evaluate with the expression in each WHEN branch using equality operand (=). If a match found, the when-statements in the corresponding WHEN branch are executed. The subsequent expressions underneath will not be evaluated.
-The else-statements in the ELSE branch are executed if no match found. The ELSE branch is optional. If no match found and there is no ELSE branch, PostgreSQL will raise the CASE_NOT_FOUND exception.
-Let’s look into some examples in our sample dvdrental database.
+  [{{c1:ELSE}}
+	  {{c1:else}}-statements ]
+{{c1:END}} {{c1:CASE}};
+
+The search-expression is an expression that will evaluate with the {{c1:expression}} in each {{c1:WHEN}} branch using {{c1:equality}} operand ({{c1:=}}). If a match found, the {{c1:when}}-statements in the corresponding WHEN branch are executed. The {{c1:subsequent}} expressions underneath will not be evaluated.
+The {{c1:else}}-statements in the ELSE branch are executed if no match found. The ELSE branch is {{c1:optional}}. If no match found and there is no ELSE branch, PostgreSQL will raise the {{c1:CASE_NOT_FOUND}} exception.
+
 Example: Here we will create a new function named get_price_segment that accepts p_film_id as the argument. Based on the rental rate of the film, it returns the price segment: mass, mainstream, high end. In case the price is not 0.99, 2.99 or 4.99, the function returns unspecified.
+
 CREATE OR REPLACE FUNCTION get_price_segment(p_film_id integer)
    RETURNS VARCHAR(50) AS $$
 DECLARE 
@@ -1403,37 +1403,41 @@ BEGIN
 	FROM film 
 	WHERE film_id = p_film_id;
 
-	 CASE rate
-	WHEN 0.99 THEN
+	{{c1:CASE}} rate
+	{{c1:WHEN}} 0.99 {{c1:THEN}}
 			price_segment = 'Mass';
-	WHEN 2.99 THEN
+	{{c1:WHEN}} 2.99 {{c1:THEN}}
 			price_segment = 'Mainstream';
-	WHEN 4.99 THEN
+	{{c1:WHEN}} 4.99 {{c1:THEN}}
 			price_segment = 'High End';
-	ELSE
+	{{c1:ELSE}}
 		price_segment = 'Unspecified';
-	END CASE;
+	{{c1:END}} {{c1:CASE}};
 
    RETURN price_segment;
 END; $$
 LANGUAGE plpgsql;
+
 Now test the get_price_segment() function using the statement:
 SELECT get_price_segment(123) AS "Price Segment";
 <!-- ================================================================== -->
 Searched CASE statement
 Syntax:
-CASE
-	WHEN boolean-expression-1 THEN
-	  statements
-  [ WHEN boolean-expression-2 THEN
-	  statements
+{{c1:CASE}}
+	{{c1:WHEN}} {{c1:boolean}}-expression-1 {{c1:THEN}}
+	  {{c1:statements}}
+  [ {{c1:WHEN}} {{c1:boolean}}-expression-2 {{c1:THEN}}
+	  {{c1:statements}}
 	... ]
-  [ ELSE
-	  statements ]
-END CASE;
-The searched CASE statement executes statements based on the result of Boolean expressions in each WHEN clause. PostgreSQL evaluates the Boolean expressions sequentially from top to bottom until one expression is true. Then the evaluation stops and the corresponding statement are executed. The control is passed to the next statement after the END CASE.
-In case no true result found, the statements in the ELSE clause are executed. The ELSE clause is optional. If you omit the ELSE clause and there is no true result, PostgreSQL will raise the CASE_NOT_FOUND exception.
+  [ {{c1:ELSE}}
+	  {{c1:statements}} ]
+{{c1:END}} {{c1:CASE}};
+
+The searched CASE statement executes statements based on the result of {{c1:Boolean}} expressions in each WHEN clause. PostgreSQL evaluates the Boolean expressions sequentially from {{c1:top}} to {{c1:bottom}} until one expression is {{c1:true}}. Then the evaluation stops and the corresponding {{c1:statement}} are executed. The control is passed to the next statement after the {{c1:END}} {{c1:CASE}}.
+In case {{c1:no}} {{c1:true}} {{c1:result}} {{c1:found}}, the statements in the ELSE clause are executed. The ELSE clause is {{c1:optional}}. If you omit the ELSE clause and there is no true result, PostgreSQL will raise the {{c1:CASE_NOT_FOUND}} exception.
+
 Example: The get_customer_service function accepts p_customer_id as the argument. It first gets the total payment paid by the customer from the payment table. Then based on the total payment, the function uses the searched CASE statement to return the service level platinum, gold, and silver.
+
 CREATE OR REPLACE FUNCTION get_customer_service (p_customer_id INTEGER) 
 	RETURNS VARCHAR (25) AS $$ 
 DECLARE
@@ -1448,17 +1452,17 @@ BEGIN
 	 WHERE
  customer_id = p_customer_id ; 
 
-   CASE
-	  WHEN total_payment > 200 THEN
+   {{c1:CASE}}
+	  {{c1:WHEN}} total_payment > 200 {{c1:THEN}}
 		 service_level = 'Platinum' ;
-	  WHEN total_payment > 100 THEN
+	  {{c1:WHEN}} total_payment > 100 {{c1:THEN}}
 	 service_level = 'Gold' ;
-	  ELSE
+	  {{c1:ELSE}}
 		 service_level = 'Silver' ;
-   END CASE ;
+   {{c1:END}} {{c1:CASE}} ;
    RETURN service_level ;
-END ; $$ LANGUAGE plpgsql;
-Now let’s test the above function using the below statement:
+{{c1:END}} ; $$ LANGUAGE plpgsql;
+
 SELECT
   148 AS customer,
 	get_customer_service (148)
@@ -1472,11 +1476,16 @@ UNION
 	get_customer_service (81);
 ```
 ## Control Flow: PostgreSQL – Loop Statement
+```text
+there is nothing here
+```
 ## Control Flow: PostgreSQL – While Loops
+```text
+there is nothing here
+```
 ## Control Flow: PostgreSQL – For Loops
 %
 ```text
-
 PostgreSQL provides the for loop statements to iterate over a range of integers or over a result set or over the result set of a dynamic query. The different uses of the for loop in PostgreSQL are described below:
 1. For loop to iterate over a range of integers
 The syntax of the for loop statement to iterate over a range of integers:
