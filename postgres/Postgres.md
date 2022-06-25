@@ -1486,31 +1486,29 @@ there is nothing here
 ## Control Flow: PostgreSQL – For Loops
 %
 ```text
-PostgreSQL provides the for loop statements to iterate over a range of integers or over a result set or over the result set of a dynamic query. The different uses of the for loop in PostgreSQL are described below:
-1. For loop to iterate over a range of integers
+PostgreSQL provides the for loop statements to iterate over a range of {{c1:integers}} or over the {{c1:result}} set of a dynamic query. The different uses of the for loop in PostgreSQL are described below:
 The syntax of the for loop statement to iterate over a range of integers:
 [ <<label>> ]
 for loop_cnt in [ reverse ] from.. to [ by step ] loop
 	statements
 end loop [ label ];
-If we analyse the above syntax:
-An integer variable loop_cnt is created at first, which is accessible inside the loop only. After each iteration, the for loop adds the step to the loop_cnt. However, when we use the reverse option, the for loop subtracts the step from loop_cnt after each iteration.
-To specify the lower and upper bound of the range, we use the from and to expressions. Before entering the loop, the for loop evaluates these expressions.
-The step that follows the by keyword specifies the iteration step with 1 as the default value. This step expression is evaluated only once.
-The following flowchart describes the for loop statement:
-Flowchart of For loop
+
+An {{c1:integer}} variable loop_cnt is created at first, which is accessible inside the loop only. After each iteration, the for loop adds the step to the loop_cnt. However, when we use the {{c1:reverse}} option, the for loop subtracts the step from loop_cnt after each iteration.
+To specify the {{c1:lower}} and {{c1:upper}} bound of the range, we use the {{c1:from}} and {{c1:to}} expressions. Before entering the loop, the for loop evaluates these expressions.
+The {{c1:step}} that follows the {{c1:by}} keyword specifies the iteration step with 1 as the {{c1:default}} value. This step expression is evaluated only once.
+
 Example 1: The following code uses the for loop statement to iterate over ten numbers from 1 to 10 and display each of them in each iteration:
-do $$
-begin
-   for cnt in 1..10 loop
+{{c1:do}} {{c1:$$}}
+{{c1:begin}}
+   for {{c1:cnt}} {{c1:in}} 1{{c1:..}}10 {{c1:loop}}
 	raise notice 'cnt: %', cnt;
-   end loop;
-end; $$
+   {{c1:end}} {{c1:loop}};
+{{c1:end}}; {{c1:$$}}
 <!-- ================================================================== -->
 Example 2: The following code uses the for loop statement to iterate over ten numbers from 10 to 1 and display each of them in each iteration:
 do $$
 begin
-   for cnt in reverse 10..1 loop
+   for cnt in reverse {{c1:10}}..{{c1:1}} loop
 	  raise notice 'cnt: %', cnt;
    end loop;
 end; $$
@@ -1521,13 +1519,13 @@ The syntax of the for loop statement to iterate over a result set of a query:
 for target in query loop
 	statements
 end loop [ label ];
-First, we create a sample table using the below commands to perform examples:
+
+// todo: create table
 CREATE TABLE employees (
   employee_id serial PRIMARY KEY,
   full_name VARCHAR NOT NULL,
   manager_id INT
 );
-Then we insert data into our employee table as follows:
 INSERT INTO employees (
   employee_id,
   full_name,
@@ -1556,32 +1554,31 @@ VALUES
   (20, 'Sanju Samson', 8);
 The table is:
 Example 3: The following code uses the for loop statement to iterate over largest 10 employee id:
-do
+{{c1:do}}
 $$
-declare
+{{c1:declare}}
 	f record;
-begin
-	for f in select employee_id, full_name 
-		   from employees 
+{{c1:begin}}
+	{{c1:for}} {{c1:f}} {{c1:in}} select employee_id, full_name from employees 
 		   order by employee_id desc, full_name
 		   limit 10 
-	loop 
+	{{c1:loop}} 
 	raise notice '% - % ', f.employee_id, f.full_name;
-	end loop;
-end;
+	{{c1:end}} {{c1:loop}};
+{{c1:end}};
 $$;
 <!-- ================================================================== -->
-
-3. For loop to iterate over the result set of a dynamic query
+3. For loop to iterate over the {{c1:result}} set of a dynamic query
 The syntax of the for loop statement to iterate over a result set of a dynamic query:
 [ <<label>> ]
 for row in execute query_expression [ using query_param [, ... ] ] 
 loop
 	statements
 end loop [ label ];
-If we analyse the above syntax:
-The query_expression is an SQL statement.
-The using clause is used to pass the query parameters.
+
+The query_expression is an SQL {{c1:statement}}.
+The using clause is used to pass the query {{c1:parameters}}.
+
 Example 4: The following code shows how to use the for loop statement to loop through a dynamic query. It has the following two configuration variables:
 sort_type: 1 to sort by employee id, 2 to sort by length of name
 rec_count: is the number of records to query from the table.
@@ -1598,20 +1595,20 @@ $$
 	query text;
 begin
 
-	query := 'select full_name, employee_id from employees ';
+	{{c1:query}} {{c1::=}} 'select full_name, employee_id from employees ';
 
-	if sort_type = 1 then
-		query := query || 'order by employee_id desc ';
-	elsif sort_type = 2 then
-	  query := query || 'order by length(full_name) desc ';
-	else 
+	{{c1:if}} sort_type = 1 {{c1:then}}
+		query := query {{c1:||}} 'order by employee_id desc ';
+	{{c1:elsif}} sort_type = 2 {{c1:then}}
+	  query := query {{c1:||}} 'order by length(full_name) desc ';
+	{{c1:else}} 
 	   raise 'invalid sort type %s', sort_type;
-	end if;
-	query := query || ' limit $1';
-	for rec in execute query using rec_count
-		loop
+	{{c1:end}} {{c1:if}};
+	query := query || ' limit {{c1:$1}}';
+	{{c1:for}} {{c1:rec}} {{c1:in}} {{c1:execute}} {{c1:query}} {{c1:using}} {{c1:rec_count}}
+		{{c1:loop}}
 		 raise notice '% - %', rec.employee_id, rec.full_name;
-	end loop;
+	{{c1:end}} {{c1:loop}};
 end;
 $$
 <!-- ================================================================== -->
@@ -1620,37 +1617,38 @@ If we change the sort_type to 2, we’ll get the following <!-- ================
 ## Control Flow: PostgreSQL – Exit
 %
 ```text
-In PostgreSQL, The EXIT statement is used to terminate all types of loops like unconditional loops, a while loop, or a for loop or terminate a block of code specified by the begin..end keywords.
-Using EXIT for loops 
-We can use the exit to terminate looping statements using the following syntax:
-Syntax:
-exit [label] [when condition]
-If we analyze the above syntax:
-Label: The label is used to signify the loop which we want to exit. It is often used in the case of nested looping. If a label is not present, the current loop is terminated.
+In PostgreSQL, The EXIT statement is used to {{c1:terminate}} all types of loops like unconditional loops, a while loop, or a for loop or terminate a block of {{c1:code}} specified by the {{c1:begin}}..{{c1:end}} keywords.
 
-Condition: The condition is a simple boolean expression that determines when we want to terminate the loop. When the value of the boolean expression becomes true, the loop is terminated.
-Both of the above are optional. We can use exit with a condition like:
-exit when cnt < 5;
+Syntax: {{c1:exit}} [label] [{{c1:when}} {{c1:condition}}]
+
+Label: The label is used to {{c1:signify}} the loop which we want to exit. It is often used in the case of {{c1:nested}} looping. If a label is not present, the {{c1:current}} loop is terminated.
+
+Condition: The condition is a simple boolean {{c1:expression}} that determines when we want to terminate the loop. When the value of the boolean expression becomes {{c1:true}}, the loop is terminated.
+
+Both of the above are {{c1:optional}}. We can use exit with a condition like:
+{{c1:exit}} {{c1:when}} cnt < 5;
+
 Without using the condition in exit, we can rewrite the same code using the IF statement as:
-if cnt < 5 then
-  exit;
-end if;
+{{c1:if}} cnt < 5 {{c1:then}}
+  {{c1:exit}};
+{{c1:end}} {{c1:if}};
+
 Example: Suppose we a have loop that is used to print all numbers from 1 to 10. We can use the EXIT statement in the following manner to limit printing the numbers up to 7 only.
 do $$
 declare
  n integer:= 8;
  cnt integer := 1 ;  
-begin
-loop  
-exit when cnt = n ;
+{{c1:begin}}
+{{c1:loop}}  
+{{c1:exit}} {{c1:when}} cnt = n ;
 raise notice '%', cnt;  
 cnt := cnt + 1 ;  
-end loop;  
-end; $$;
-<!-- ================================================================== -->
+{{c1:end}} {{c1:loop}};  
+{{c1:end}}; $$;
 In the above example, we terminate our loop as soon as the value of our cnt variable reaches n(here 8) and thus, only values up to 7 are printed.
+
 Using EXIT to exit a block
-We can then the exit statement to terminate a block of code specified by the begin..end keywords. In this case, the exit directly passes the flow of the program to after the end keyword, thus ending the current block.
+We can then the exit statement to terminate a block of code specified by the {{c1:begin}}..{{c1:end}} keywords. In this case, the exit directly {{c1:passes}} the flow of the program to after the end keyword, thus ending the current block.
 Syntax:
 <<block_label>>
 BEGIN
@@ -1658,7 +1656,8 @@ BEGIN
    EXIT [block_label] [WHEN condition];
    Statements
 END block_label;
-Using this syntax, we can terminate the block of code prematurely, thus preventing the statements after the exit to be run.
+
+Using this syntax, we can terminate the block of code {{c1:prematurely}}, thus preventing the statements after the exit to be run.
 Example: The following example shows how we can use EXIT to exit a block.
 do
 $$
@@ -1674,7 +1673,7 @@ begin
 end;
 $$;
 <!-- ================================================================== -->
-In the above example, the statement after exit was not printed as the block was terminated using EXIT before the statement. Thus inside the block, only statements before EXIT were executed and after that, the flow simply passes after the block ended.
+In the above example, the statement after exit was {{c1:not}} printed as the block was terminated using EXIT before the statement. Thus inside the block, only statements {{c1:before}} EXIT were executed and after that, the flow simply passes {{c1:after}} the block ended.
 ```
 ## Control Flow: PostgreSQL – Continue
 %
@@ -1705,7 +1704,9 @@ begin
  end loop;
 end;
 $$;
+
 <!-- ================================================================== -->
+
 In the above example, we use the continue statement to skip the odd numbers by using the fact that the remainder when an odd number is divided by 2 is 1.  
 Example 2 : The following example will be used to display all numbers from 1 to 10 without displaying the number 6.
 do
@@ -1725,7 +1726,9 @@ begin
  end loop;
 end;
 $$;
+
 <!-- ================================================================== -->
+
 In the above example, we use the continue statement to skip the iteration when the value of the cnt variable reaches 6.
 ```
 ## Working with JOINS & Schemas: PostgreSQL – Joins
